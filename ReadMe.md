@@ -3,7 +3,7 @@ A mod that doubles all enemies in the game.
 So far this is not a full release, but it works for most enemies in the game.
 
 Things to do:
-         *  Duplicate pawns that are alraedy duped
+         *  Duplicate spawns that are already duped
          *  Add AbsRad dependency
          *  Don't dupe tyrant phase 2
          *  Wait on mega baloon spawner
@@ -15,10 +15,11 @@ Things to do:
          *  TMG is in the foreground
          *  Maybe also add wait to Markoth
          *  Potentially dupe Xero spawn swords
-         *  Duping flukmarm flukeefeys would be funny
+         *  Duping flukmarm flukefeys would be funny
          *  3 Mantises???? Into normal SoB
          *  
-         *  QoL OW Nosk
+         *  QoL ow Nosk breaks
+         *  Invinsibility Monitor perhaps
          *  
          *  Hard:
          *  Sly breaks
