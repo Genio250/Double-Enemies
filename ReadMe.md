@@ -1,22 +1,47 @@
 A mod that doubles all enemies in the game.
 
-So far this is not a full release, but it works for most enemies in the game.
-AbsRad is disabled, use Double Radiance to fight a good version.
+This is the full release version. It doesn't support everything yet, but it has most features that I want working.
+Modded bosses and enemies will get duped, but them working properly, if at all, is not guaranteed, so be careful.
 
-If you play this version and find any other enemy that breaks let me know
+Features:
+    * Double Enemies: Almost all enemies in the game are doubled
+    * Synced HP: All supported bosses will have their HP doubled and synchronized
+    * Enemies that would stick completely together are split appart
+
+Dependencies:
+    * Satchel
+    * Doubled Radiance: It is not needed for the code to run but Radiance and AbsRad are not supported natively.
+    * Invinsibiliy Monitor: It is not needed for the code to run, but bosses that scream mid battle like THK or Dung Defender can cause unavoidable hits.
+
+If you find any enemy not listed that is broken or doesn't get duped, let me know.
+
+Exceptions:
+    * Any an all enemies that are spawned off bounds and summoned through a teleport. For example: Aspid Hatchlings
+    * The vengefly king in the first trial
+    * Oro, Mato, Sly, Crystal Guardian, Enraged Guardian, Pale Lurker, Massive Moss Charger, Godhome Uumuu, Winged Nosk, The Beast (God Tamer), 
+    Hive Knight and Watcher Knights.
+    * First Trial Vengefly King
+    * Some dumb random enemies
+
+Known issues:
+    * Colosseum waves are not edited so some can be skipped, most notably the final bosses
+    * False Knight doesn't double its hp
+    * Mantis Lords and SoB phase 2 duplicates are phase 1 mantis lords, so they don't do coordinated attacks
+    * Hornet 1 gets stuck after throwing a needle
+    * Galien duplicate scythe doesn't have an animation
+    * Overworld Uumuu can't be popped by Quirell and runs out of attacks
+    * Some enemies like Grub mimics just cannot be duplicated
+    * With QoL enabled, Nosk in the overworld spawns funnily
+    * Soul Warrior in his ascended arena sometimes teleports out of bounds
+
+
 
 Things to do:
          *  Sync Boss Phases to doubled hp
          *  Spawns that are alraedy duped
-         *  Shadow creepers add to 1d enemies
          *  Some enemies can't be duped
-         *  Doesn't work: Enraged, WK, CG, Mossie, Lobster, Nosket
-         *  Oro and Mato phase 2
-         *  3 Mantises???? Into normal SoB
          *  Mawlek throws an error
-         *  Ow Dream warriors don't have extra hp
-         *  Mimics get deleted  
-         *  Spawn an ow uumuu in gh
+         *  Modded bosses support
          *  
          *  FSM and IL Hooks:
          *  QoL PV and OW Nosk
@@ -33,3 +58,6 @@ Things to do:
          *  Sly breaks
          *  WD underground follows the main
          *  Tyrant Orbs follows the main
+
+
+Mod by Genio250
