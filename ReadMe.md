@@ -2,6 +2,7 @@ A mod that doubles all enemies in the game.
   
 This is the full release version. It doesn't support everything yet, but it has most features that I want working.  
 Modded bosses and enemies will get duped, but them working properly, if at all, is not guaranteed, so be careful.  
+As of 1.1 the mod menu will show up with the option to toggle the mod, but this is temporarily disabled and does nothing.  
   
 Features:  
     * Double Enemies: Almost all enemies in the game are doubled  
