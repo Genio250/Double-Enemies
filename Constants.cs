@@ -15,21 +15,20 @@ namespace DoubleEnemies
             "Infected Knight", "Lost Kin", "Mimic Spider", "Jar Collector", "Lancer", "Mantis Traitor Lord", "Grey Prince", "Nightmare Grimm Boss",
             "Grimm Boss", "HK Prime", "Sheo Boss", "Ghost Warrior Hu", "Ghost Warrior Slug", "Ghost Warrior Galien", "Ghost Warrior Markoth",
             "Ghost Warrior Xero", "Ghost Warrior Marmu", "Ghost Warrior No Eyes", "Dung Defender", "White Defender", "Dream Mage Lord",
-            "Dream Mage Lord Phase2", "Mage Lord", "Mage Lord Phase2", "Mage Knight", "Hollow Knight Boss", "Mega Jellyfish", "Mantis Lord S1",
-            "Mantis Lord S2", "Mantis Lord S3"];
+            "Dream Mage Lord Phase2", "Mage Lord", "Mage Lord Phase2", "Mage Knight", "Hollow Knight Boss", "Mantis Lord S1", "Mantis Lord S2",
+            "Mantis Lord S3", "Mega Jellyfish", "Lobster", "Mega Moss Charger", "Hornet Nosk", "Mega Jellyfish GG", "Hive Knight", "Sly Boss",
+            "Oro", "Mato", "Black Knight 1", "Black Knight 2", "Black Knight 3", "Black Knight 4", "Black Knight 5", "Black Knight 6",
+            "Mega Zombie Beam Miner (1)", "Zombie Beam Miner Rematch", "Royal Gaurd", "Royal Gaurd (1)", "Mushroom Brawler 1",
+            "Mushroom Brawler 2"];
 
-        public static List<string> DWarriors = ["Ghost Warrior Hu", "Ghost Warrior Slug", "Ghost Warrior Galien", "Ghost Warrior Markoth",
-            "Ghost Warrior Xero", "Ghost Warrior Marmu", "Ghost Warrior No Eyes"];
+        public static List<string> Exceptions = ["Radiance", "Head", "Tinger", "Mantis Lord"];
 
-        public static List<string> DWarriorArenas = ["Fungus2_32", "Cliffs_02", "Deepnest_40", "Deepnest_East_10", "RestingGrounds_04",
-            "Fungus3_40", "Fungus1_35"];
-
-        public static List<string> Exceptions = ["Radiance", "Head", "Tinger", "Lobster", "Mega Jellyfish GG", "Mega Moss Charger",
-            "Mantis Lord", "Zombie Beam Miner", "Sly Boss", "Oro", "Mato"];
+        public static List<string> Offset = ["Turret", "Plant Trap", "Acid Walker", "Ceiling Dropper", "Abyss Crawler", "Egg Sac",
+        "Crystallised Lazer Bug", "Mines Crawler", "Great Shield Zombie Bottom", "Moss Knight", "Mantis", "Fung Crawler"];
     }
     public static class Toggles
     {
-        public static bool mod = true, PV = false, Nosk = false;
+        public static bool mod = true, QoL = false;
         public static int amount;
     }
 }

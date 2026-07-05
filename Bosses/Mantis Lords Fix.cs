@@ -35,3 +35,27 @@ namespace DoubleEnemies
         }
     }
 }
+
+/*            GameObject lordS1 = GameObject.Find("Mantis Lord S1");
+            GameObject extra1 = GameObject.Instantiate(lordS1);
+            extra1.name = "Mantis Lord S1(EnemyDupe)";
+
+            GameObject lordS2 = GameObject.Find("Mantis Lord S2");
+            GameObject extra2 = GameObject.Instantiate(lordS2);
+            extra2.name = "Mantis Lord S2(EnemyDupe)";
+
+            GameObject MantisBattle = GameObject.Find("Mantis Battle");
+            PlayMakerFSM BattleControl = MantisBattle.LocateMyFSM("Battle Control");
+
+            BattleControl.FsmVariables.FindFsmInt("Battle Enemies").Value = 4;
+
+            GameObject BattleSub = GameObject.Find("Battle Sub");
+            GameObject extraSub = GameObject.Instantiate(BattleSub, BattleSub.transform.parent);
+            extraSub.name = "Battle Sub 2";
+
+            PlayMakerFSM extraSubFSM = BattleSub.LocateMyFSM("Start");
+
+            extraSubFSM.FsmVariables.FindFsmGameObject("Mantis 1").Value = GameObject.Find("Mantis Lord S1(EnemyDupe)");
+            extraSubFSM.FsmVariables.FindFsmGameObject("Mantis 2").Value = GameObject.Find("Mantis Lord S2(EnemyDupe)");
+
+            extraSubFSM.SetState("Init Pause");*/
