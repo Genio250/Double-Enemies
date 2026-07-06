@@ -1,12 +1,11 @@
 ﻿using HutongGames.PlayMaker.Actions;
 using IL;
-//using IL.HutongGames.PlayMaker.Actions;
 using InControl;
 using Modding;
 using MonoMod.RuntimeDetour;
 using On;
-//using On.HutongGames.PlayMaker.Actions;
 using QoL;
+using Everwatchers;
 using Satchel;
 using Satchel.Futils;
 using Satchel.Futils.Serialiser;
@@ -27,7 +26,7 @@ namespace DoubleEnemies
     public class DoubleEnemies : Mod, IMenuMod
     {
         public DoubleEnemies() : base("Double Enemies") { }
-        public override string GetVersion() => "1.1.0";
+        public override string GetVersion() => "1.1.1";
         public bool ToggleButtonInsideMenu => false;
 
 
@@ -46,7 +45,7 @@ namespace DoubleEnemies
                 }
             };
         }
-        public int counter = 0;
+        public static int counter = 0, togglerer = 0;
         public static bool Mantis = true;
         public static GameObject MantisLord = null;
 
@@ -54,18 +53,25 @@ namespace DoubleEnemies
         {
             Log("Initializing");
             ModHooks.OnEnableEnemyHook += ModHooks_OnEnableEnemyHook;
+            ModHooks.BeforeSceneLoadHook += ModHooks_BeforeSceneLoadHook;
+            ModHooks.HeroUpdateHook += ModHooks_HeroUpdateHook;
+            Galien.Initialize();
+            HPShare.Initialize();
+
             if (ModHooks.GetMod("QoL") is Mod)
             {
                 Toggles.QoL = true;
                 Log("Reading QoL");
             }
-            ModHooks.BeforeSceneLoadHook += ModHooks_BeforeSceneLoadHook;
-            ModHooks.HeroUpdateHook += ModHooks_HeroUpdateHook;
-            Galien.Initialize();
-            HPShare.Initialize();
+
+            if (ModHooks.GetMod("Everwatchers") is Mod)
+            {
+                Toggles.Everwatchers = true;
+                Log("Reading Everwatchers");
+            }
         }
 
-        /*void Filler()
+       /* void Filler()
         {
             GameObject MossyDupe = GameObject.Find("Mega Moss Charger(EnemyDupe)");
             PlayMakerFSM fsm = MossyDupe.LocateMyFSM("Mossy Control");
@@ -83,23 +89,39 @@ namespace DoubleEnemies
 
         void Test()
         {
-            GameObject MossyDupe = GameObject.Find("Pale Lurker(EnemyDupe)");
-            PlayMakerFSM fsm = MossyDupe.LocateMyFSM("Lurker Control");
-            Log(fsm.ActiveStateName);
+
         }
 
- */
+
+
+ 
         void Bow()
         {
-
-        }
+            GameObject Burrow = GameObject.Find("Burrow Effect(EnemyDupe)");
+            PlayMakerFSM Bfsm = Burrow.LocateMyFSM("Burrow Effect");
+            Log(Bfsm.ActiveStateName);
+        }*/
 
         private void ModHooks_HeroUpdateHook()
         {
-            if (Input.GetKeyDown(KeyCode.P))
+            if (!Toggles.mod && togglerer == 0)
+            {
+                Log("Toggling off");
+                ModHooks.OnEnableEnemyHook -= ModHooks_OnEnableEnemyHook;
+                ModHooks.BeforeSceneLoadHook -= ModHooks_BeforeSceneLoadHook;
+                togglerer++;
+            }
+            if (Toggles.mod && togglerer > 0)
+            {
+                Log("Toggling on");
+                ModHooks.OnEnableEnemyHook += ModHooks_OnEnableEnemyHook;
+                ModHooks.BeforeSceneLoadHook += ModHooks_BeforeSceneLoadHook;
+                togglerer = 0;
+            }
+            /*if (Input.GetKeyDown(KeyCode.P))
             {
                 Log("Attempting to give AI");
-                //Test();
+                Test();
             }
 
             if (Input.GetKeyDown(KeyCode.I))
@@ -113,8 +135,7 @@ namespace DoubleEnemies
                 GameObject Battle = GameObject.Find("Battle Scene v2");
                 PlayMakerFSM fsmB = Battle.LocateMyFSM("Battle Control");
                 Log(fsmB.FsmVariables.GetFsmInt("Battle Enemies").Value);
-            }
-
+            }*/
         }
 
 
@@ -175,7 +196,7 @@ namespace DoubleEnemies
                     Satchel.CoroutineHelper.WaitForSecondsBeforeInvoke(0.5f, () => HiveKnight.HiveKnightAI());
                 if (enemy.name.Contains("Sly Boss"))
                     Satchel.CoroutineHelper.WaitForSecondsBeforeInvoke(0.5f, () => Sly.SlyAI());
-                if (enemy.name.Contains("Black Knight 1"))
+                if (enemy.name.Contains("Black Knight 1") && enemy.name.Length != 15)
                     Satchel.CoroutineHelper.WaitForSecondsBeforeInvoke(0.2f, () => Watchers.WatchersAI());
                 if (enemy.name.Contains("Mega Zombie Beam Miner (1)") && GameManager.instance.sceneName.Contains("GG"))
                     Satchel.CoroutineHelper.WaitForSecondsBeforeInvoke(0.2f, () => CG.CrystalAI());
@@ -183,6 +204,10 @@ namespace DoubleEnemies
                     Satchel.CoroutineHelper.WaitForSecondsBeforeInvoke(3.1f, () => EG.EnragedAI());
                 if (enemy.name.Contains("Mushroom Brawler 1"))
                     Satchel.CoroutineHelper.WaitForSecondsBeforeInvoke(1, () => Ogres.OgresAI());
+                if (enemy.name.Contains("White Defender"))
+                    Satchel.CoroutineHelper.WaitForSecondsBeforeInvoke(1, () => WD.WhiteDefAI());
+                if (enemy.name.Contains("Dung Defender"))
+                    Satchel.CoroutineHelper.WaitForSecondsBeforeInvoke(1, () => DungD.DungDefAI());
 
                 if (enemy.name.Contains("Mantis Lord"))
                 {
@@ -235,7 +260,6 @@ namespace DoubleEnemies
              *  Idk why ascended warrior sometimes tps oob
              *  Fix OW Galien Scythe
              *  OW Uumuu
-             *  WD underground follows the main
              *  Tyrant Orbs follows the main
              *  
             */

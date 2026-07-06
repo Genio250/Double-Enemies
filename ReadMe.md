@@ -2,12 +2,12 @@ A mod that doubles all enemies in the game.
   
 This is the full release version. It doesn't support everything yet, but it has most features that I want working.  
 Modded bosses and enemies will get duped, but them working properly, if at all, is not guaranteed, so be careful.  
-As of 1.1 the mod menu will show up with the option to toggle the mod, but this is temporarily disabled and does nothing.  
   
 Features:  
-    * Double Enemies: Almost all enemies in the game are doubled  
-    * Synced HP: All supported bosses will have their HP doubled and synchronized  
-    * Enemies that would stick completely together are split appart  
+    * Double Enemies: Almost all enemies in the game are doubled.  
+    * Synced HP: All supported bosses will have their HP doubled and synchronized, also applies to some mini bosses.  
+    * Enemies that would stick completely together are split appart.  
+    * Mod Toggle.  
   
 Dependencies:  
     * Satchel  
@@ -23,6 +23,11 @@ Exceptions:
     * First Trial Vengefly King  
     * Some dumb random enemies  
   
+Supported Mods:  
+    * Everwatchers: All 4 difficulties. Toggle and HP share not supported.  
+    * Pale Prince: I tested it and it worked fine lol, but I didn't touch it.  
+    * Most Radiance mods, as supported by Double Radiance.  
+
 Known issues:  
     * Colosseum waves are not edited so some can be skipped, most notably the final bosses    
     * False Knight doesn't double its hp  
@@ -38,7 +43,7 @@ Known issues:
   
 Things to do:  
              *  Sync Boss Phases to doubled hp  
-             *  Spawns that are alraedy duped  
+             *  Spawns that are already duped  
              *  Some enemies can't be duped  
              *  Mimics get deleted   
              *  Arenas  
@@ -50,7 +55,6 @@ Things to do:
              *  Idk why ascended warrior sometimes tps oob  
              *  Fix OW Galien Scythe  
              *  OW Uumuu  
-             *  WD underground follows the main  
              *  Tyrant Orbs follows the main  
   
   
