@@ -38,6 +38,7 @@ Known issues:
     * Some enemies like Grub mimics just cannot be duplicated  
     * With QoL enabled, Nosk in the overworld spawns funnily  
     * Soul Warrior in his ascended arena sometimes teleports out of bounds  
+    * Soul Warrior 1 in the overworld has no AI when entering the arena from the breakable roof  
   
   
   
@@ -55,7 +56,7 @@ Things to do:
              *  Idk why ascended warrior sometimes tps oob  
              *  Fix OW Galien Scythe  
              *  OW Uumuu  
-             *  Tyrant Orbs follows the main  
+             *  Fix dive entrance warrior  
   
   
 Mod by Genio250  

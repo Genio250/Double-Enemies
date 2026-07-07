@@ -248,6 +248,12 @@ namespace DoubleEnemies
                 PureVessel.PVSkip();
             }
 
+            if (enemy.name.Contains("White Defender") && GameManager.instance.sceneName.Contains("GG"))
+            {
+                New.LocateMyFSM("Dung Defender").RemoveAction("Init 2", 0);
+                Modding.Logger.Log("DOING");
+            }
+
             HPShare.DoubleHP(enemy, New);
 
             if (enemy.name == "Dream Mage Lord Phase2")
@@ -289,7 +295,6 @@ namespace DoubleEnemies
              *  Idk why ascended warrior sometimes tps oob
              *  Fix OW Galien Scythe
              *  OW Uumuu
-             *  Tyrant Orbs follows the main
              *  
             */
 

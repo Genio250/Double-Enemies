@@ -38,6 +38,7 @@ namespace DoubleEnemies
             Burrow2.name = "Burrow Effect(EnemyDupe)";
 
             Dfsm.FsmVariables.GetFsmGameObject("Burrow Effect").Value = Burrow2;
+            Dfsm.RemoveAction("Init 2", 0);
 
             ModHooks.HeroUpdateHook += ModHooks_HeroUpdateHook;
             Avoider = 1;
