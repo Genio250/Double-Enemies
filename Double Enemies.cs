@@ -26,7 +26,7 @@ namespace DoubleEnemies
     public class DoubleEnemies : Mod, IMenuMod
     {
         public DoubleEnemies() : base("Double Enemies") { }
-        public override string GetVersion() => "1.1.1";
+        public override string GetVersion() => "1.1.2";
         public bool ToggleButtonInsideMenu => false;
 
 
