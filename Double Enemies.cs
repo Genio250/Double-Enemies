@@ -45,7 +45,7 @@ namespace DoubleEnemies
                 }
             };
         }
-        public static int counter = 0, togglerer = 0;
+        public static int counter = 0, togglerer = 0, mager = 0, mager2 = 0, mager3 = 0;
         public static bool Mantis = true;
         public static GameObject MantisLord = null;
 
@@ -87,20 +87,17 @@ namespace DoubleEnemies
             Log(fsm.FsmVariables.FindFsmInt("P2 HP").Value);
         }
 
-        void Test()
-        {
-
-        }
-
-
-
- 
         void Bow()
         {
             GameObject Burrow = GameObject.Find("Burrow Effect(EnemyDupe)");
             PlayMakerFSM Bfsm = Burrow.LocateMyFSM("Burrow Effect");
             Log(Bfsm.ActiveStateName);
         }*/
+
+        void Test()
+        {
+
+        }
 
         private void ModHooks_HeroUpdateHook()
         {
@@ -172,6 +169,16 @@ namespace DoubleEnemies
                 else if (enemy.name.Contains("Hornet Boss 1")) { wait = 3; tp = true; }
                 else if (enemy.name.Contains("Zombie Beam Miner Rematch")) { wait = 3; tp = true; }
                 else wait = 0;
+
+                if (enemy.name == "Dream Mage Lord Phase2")
+                {
+                    if (mager == 0) mager++;
+                    else
+                    {
+                        mager = 0;
+                        skip = true;
+                    }
+                }
                 foreach (string s in Lists.Exceptions)
                 {
                     if (enemy.name.Contains(s)) skip = true;
@@ -208,6 +215,10 @@ namespace DoubleEnemies
                     Satchel.CoroutineHelper.WaitForSecondsBeforeInvoke(1, () => WD.WhiteDefAI());
                 if (enemy.name.Contains("Dung Defender"))
                     Satchel.CoroutineHelper.WaitForSecondsBeforeInvoke(1, () => DungD.DungDefAI());
+                if (enemy.name.Contains("Mage Lord") && !enemy.name.Contains("Phase2") && !enemy.name.Contains("Dream"))
+                    Satchel.CoroutineHelper.WaitForSecondsBeforeInvoke(0.5f, () => SMaster.SMasterAI());
+                if (enemy.name.Contains("Dream Mage Lord") && !enemy.name.Contains("Phase2"))
+                    Satchel.CoroutineHelper.WaitForSecondsBeforeInvoke(0.5f, () => STyrant.STyrantAI());
 
                 if (enemy.name.Contains("Mantis Lord"))
                 {
@@ -237,8 +248,25 @@ namespace DoubleEnemies
                 PureVessel.PVSkip();
             }
 
-            //HPShare.DoubleHP(enemy);
             HPShare.DoubleHP(enemy, New);
+
+            if (enemy.name == "Dream Mage Lord Phase2")
+            {
+                enemy.manageHealth(enemy.GetComponent<HealthManager>().hp / 8);
+                New.manageHealth(New.GetComponent<HealthManager>().hp / 8);
+            }
+
+            if (enemy.name == "Dream Mage Lord")
+            {
+                enemy.manageHealth(enemy.GetComponent<HealthManager>().hp / 2);
+                New.manageHealth(New.GetComponent<HealthManager>().hp / 2);
+            }
+
+            if (enemy.name == "Mage Lord Phase2")
+            {
+                enemy.manageHealth(enemy.GetComponent<HealthManager>().hp / 2);
+                New.manageHealth(New.GetComponent<HealthManager>().hp / 2);
+            }
 
             Offset.EnemyOffset(enemy, New);
         }
@@ -252,6 +280,7 @@ namespace DoubleEnemies
              *  Some enemies can't be duped
              *  Mimics get deleted 
              *  Arenas
+             *  Soul warrior in sanctum when coming from the top has no ai
              *  
              *  Pale Lurker
              *  OW Nosk
