@@ -60,6 +60,21 @@ namespace DoubleEnemies
                     Modding.Logger.Log("EG Dupe Shot");
                 }
             };
+
+            ModHooks.HeroUpdateHook += ModHooks_HeroUpdateHook;
+        }
+
+        private static void ModHooks_HeroUpdateHook()
+        {
+            GameObject go = GameObject.Find("Zombie Beam Miner Rematch(EnemyDupe)");
+            if (go == null)
+            {
+                GameObject.Destroy(GameObject.Find("Beam(EnemyDupe)"));
+                GameObject.Destroy(GameObject.Find("Beam Ball(EnemyDupe)"));
+                GameObject.Destroy(GameObject.Find("Beam Impact(EnemyDupe)"));
+                Modding.Logger.Log("Success");
+                ModHooks.HeroUpdateHook -= ModHooks_HeroUpdateHook;
+            }
         }
     }
 }
