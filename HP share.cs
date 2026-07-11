@@ -46,13 +46,7 @@ namespace DoubleEnemies
             if (commit && Boss2 != null)
             {
                 HealthManager copy = Boss2.GetComponent<HealthManager>();
-                if (!Boss2.name.Contains("Mega Fat Bee"))
-                {
-                    orig(self, hitInstance);
-                    if (copy.hp - hitInstance.DamageDealt > 0) copy.hp -= hitInstance.DamageDealt;
-                    else orig(copy, hitInstance);
-                }
-                else
+                if (Boss2.name.Contains("Mega Fat Bee"))
                 {
                     if (copy.hp - hitInstance.DamageDealt > 0)
                     {
@@ -66,6 +60,12 @@ namespace DoubleEnemies
                         orig(copy, hitInstance);
                     }
                 }
+                else
+                {
+                    orig(self, hitInstance);
+                    if (copy.hp - hitInstance.DamageDealt > 0) copy.hp -= hitInstance.DamageDealt;
+                    else orig(copy, hitInstance);
+                }
             }
             else orig(self, hitInstance);
             counter++;
@@ -75,7 +75,7 @@ namespace DoubleEnemies
         {
             foreach (string s in Lists.Bosses)
             {
-                if (enemy.name.Contains(s) && s != "Mega Jellyfish" && !enemy.name.Contains("Mantis Lord") && !enemy.name.Contains("False Knight New"))
+                if (enemy.name == s && s != "Mega Jellyfish" && !enemy.name.Contains("Mantis Lord") && !enemy.name.Contains("False Knight New"))
                     enemy.manageHealth(2 * enemy.GetComponent<HealthManager>().hp);
             }
             Satchel.CoroutineHelper.WaitForFramesBeforeInvoke(1, () => New.manageHealth(enemy.GetComponent<HealthManager>().hp));

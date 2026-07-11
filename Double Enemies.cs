@@ -1,24 +1,30 @@
-﻿using HutongGames.PlayMaker.Actions;
+﻿using CagneyCarnation;
+using Everwatchers;
+using FiveKnights.Dryya;
+using HutongGames.PlayMaker;
+using HutongGames.PlayMaker.Actions;
 using IL;
 using InControl;
 using Modding;
 using MonoMod.RuntimeDetour;
 using On;
 using QoL;
-using Everwatchers;
 using Satchel;
 using Satchel.Futils;
 using Satchel.Futils.Serialiser;
+using Steamworks;
 using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
+using System.Security.Cryptography;
 using Unity.IO.LowLevel.Unsafe;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using UnityEngine.Timeline;
+using UnityEngine.UIElements;
 using static Mono.Security.X509.X520;
-using HutongGames.PlayMaker;
-using Steamworks;
 
 namespace DoubleEnemies
 {
@@ -26,7 +32,7 @@ namespace DoubleEnemies
     public class DoubleEnemies : Mod, IMenuMod
     {
         public DoubleEnemies() : base("Double Enemies") { }
-        public override string GetVersion() => "1.1.2";
+        public override string GetVersion() => "1.1.3";
         public bool ToggleButtonInsideMenu => false;
 
 
@@ -42,10 +48,24 @@ namespace DoubleEnemies
                     Values = new string[] { "Off", "On" },
                     Saver = (i) => Toggles.mod = i == 1,
                     Loader = () => Toggles.mod ? 1 : 0
+                },new IMenuMod.MenuEntry
+                {
+                    Name = "Only Double Bosses",
+                    Description = "Disable the duplication of non boss enemies",
+                    Values = new string[] { "On", "Off" },
+                    Saver = (i) => Toggles.onlyboss = i == 0,
+                    Loader = () => Toggles.onlyboss ? 0 : 1
+                },new IMenuMod.MenuEntry
+                {
+                    Name = "Duplicate Drops",
+                    Description = "Duplicate special enemy drops such as Grimmkin Flames",
+                    Values = new string[] { "Off", "On" },
+                    Saver = (i) => Toggles.drops = i == 1,
+                    Loader = () => Toggles.drops ? 1 : 0
                 }
             };
         }
-        public static int counter = 0, togglerer = 0, mager = 0, mager2 = 0, mager3 = 0;
+        public static int counter = 0, togglerer = 0, trip = 0, dry = 0;
         public static bool Mantis = true;
         public static GameObject MantisLord = null;
 
@@ -69,6 +89,18 @@ namespace DoubleEnemies
                 Toggles.Everwatchers = true;
                 Log("Reading Everwatchers");
             }
+
+            if (ModHooks.GetMod("Cagney Carnation") is Mod)
+            {
+                Toggles.Cagney = true;
+                Log("Reading Cagney Carnation");
+            }
+
+            if (ModHooks.GetMod("Pale Court") is Mod)
+            {
+                Toggles.PaleCourt = true;
+                Log("Reading Pale Court");
+            }
         }
 
        /* void Filler()
@@ -85,14 +117,12 @@ namespace DoubleEnemies
 
             Log(fsm.ActiveStateName);
             Log(fsm.FsmVariables.FindFsmInt("P2 HP").Value);
-        }
+        }*/
 
         void Bow()
         {
-            GameObject Burrow = GameObject.Find("Burrow Effect(EnemyDupe)");
-            PlayMakerFSM Bfsm = Burrow.LocateMyFSM("Burrow Effect");
-            Log(Bfsm.ActiveStateName);
-        }*/
+
+        }
 
         void Test()
         {
@@ -115,19 +145,18 @@ namespace DoubleEnemies
                 ModHooks.BeforeSceneLoadHook += ModHooks_BeforeSceneLoadHook;
                 togglerer = 0;
             }
-            /*if (Input.GetKeyDown(KeyCode.P))
+            /*if (Input.GetKeyDown(KeyCode.K))
             {
                 Log("Attempting to give AI");
                 Test();
             }
 
-            if (Input.GetKeyDown(KeyCode.I))
+            /*if (Input.GetKeyDown(KeyCode.I))
             {
                 Log("Attempting to give AI");
                 Bow();
             }
-
-            if (Input.GetKeyDown(KeyCode.K))
+            /*if (Input.GetKeyDown(KeyCode.K))
             {
                 GameObject Battle = GameObject.Find("Battle Scene v2");
                 PlayMakerFSM fsmB = Battle.LocateMyFSM("Battle Control");
@@ -170,18 +199,41 @@ namespace DoubleEnemies
                 else if (enemy.name.Contains("Zombie Beam Miner Rematch")) { wait = 3; tp = true; }
                 else wait = 0;
 
-                if (enemy.name == "Dream Mage Lord Phase2")
+                foreach (string s in Lists.Tripled)
                 {
-                    if (mager == 0) mager++;
-                    else
+                    if (enemy.name.Contains(s))
                     {
-                        mager = 0;
-                        skip = true;
+                        if (trip == 0) trip++;
+                        else
+                        {
+                            trip = 0;
+                            skip = true;
+                        }
                     }
                 }
+
+                if (enemy.name.Contains("Dryya2(Clone)"))
+                {
+                    if (dry == 0)
+                    {
+                        dry++;
+                        skip = true;
+                    }
+                    else dry = 0;
+                }
+
                 foreach (string s in Lists.Exceptions)
                 {
                     if (enemy.name.Contains(s)) skip = true;
+                }
+
+                if (Toggles.onlyboss)
+                {
+                    skip = true;
+                    foreach (string s in Lists.Bosses)
+                    {
+                        if (enemy.name.Contains(s)) skip = false;
+                    }
                 }
 
                 if (!skip)
@@ -219,6 +271,14 @@ namespace DoubleEnemies
                     Satchel.CoroutineHelper.WaitForSecondsBeforeInvoke(0.5f, () => SMaster.SMasterAI());
                 if (enemy.name.Contains("Dream Mage Lord") && !enemy.name.Contains("Phase2"))
                     Satchel.CoroutineHelper.WaitForSecondsBeforeInvoke(0.5f, () => STyrant.STyrantAI());
+                if (enemy.name.Contains("Pale Lurker"))
+                    Satchel.CoroutineHelper.WaitForSecondsBeforeInvoke(0.5f, () => PaleLurker.LurkerAI());
+                if (enemy.name.Contains("Flamebearer"))
+                    Satchel.CoroutineHelper.WaitForSecondsBeforeInvoke(0.5f, () => Grimmkin.GrimmkinAI(enemy.name));
+                if (enemy.name.Contains("Cagney Carnation") && Toggles.Cagney == true)
+                    Satchel.CoroutineHelper.WaitForSecondsBeforeInvoke(0.5f, () => Cagney.CagneyAI());
+                if (enemy.name.Contains("Dryya2(Clone)") && Toggles.PaleCourt == true)
+                    Satchel.CoroutineHelper.WaitForSecondsBeforeInvoke(0.5f, () => Dryya.DryyaAI());
 
                 if (enemy.name.Contains("Mantis Lord"))
                 {
@@ -256,30 +316,9 @@ namespace DoubleEnemies
 
             HPShare.DoubleHP(enemy, New);
 
-            if (enemy.name == "Dream Mage Lord Phase2")
-            {
-                enemy.manageHealth(enemy.GetComponent<HealthManager>().hp / 8);
-                New.manageHealth(New.GetComponent<HealthManager>().hp / 8);
-            }
-
-            if (enemy.name == "Dream Mage Lord")
-            {
-                enemy.manageHealth(enemy.GetComponent<HealthManager>().hp / 2);
-                New.manageHealth(New.GetComponent<HealthManager>().hp / 2);
-            }
-
-            if (enemy.name == "Mage Lord Phase2")
-            {
-                enemy.manageHealth(enemy.GetComponent<HealthManager>().hp / 2);
-                New.manageHealth(New.GetComponent<HealthManager>().hp / 2);
-            }
-
             Offset.EnemyOffset(enemy, New);
         }
 
-
-            //Log(fsm.ActiveStateName);
-            //Log(fsm.FsmVariables.FindFsmInt("P2 HP").Value);
             /*
              *  Sync Boss Phases to doubled hp
              *  Spawns that are alraedy duped
@@ -288,7 +327,6 @@ namespace DoubleEnemies
              *  Arenas
              *  Soul warrior in sanctum when coming from the top has no ai
              *  
-             *  Pale Lurker
              *  OW Nosk
              *  OW CG and EG 
              *  Potentially dupe Xero spawn swords

@@ -19,12 +19,13 @@ If you find any enemy not listed that is broken or doesn't get duped, let me kno
 Exceptions:  
     * Any an all enemies that are spawned off bounds and summoned through a teleport. For example: Aspid Hatchlings  
     * The vengefly king in the first trial  
-    * Pale Lurker  
     * First Trial Vengefly King  
     * Some dumb random enemies  
   
 Supported Mods:  
     * Everwatchers: All 4 difficulties. Toggle and HP share not supported.  
+    * Dryya: She is the only boss from Pale Curt that works. Her staggers are synchronized but take 24 hits instead of 12. Text is glitched for some reason.  
+    * Cagney Carnation: Boss and his ads work. Second phase remains at the vanilla hp because I decided.  
     * Pale Prince: I tested it and it worked fine lol, but I didn't touch it.  
     * Most Radiance mods, as supported by Double Radiance.  
 
@@ -41,7 +42,6 @@ Known issues:
     * Soul Warrior 1 in the overworld has no AI when entering the arena from the breakable roof  
   
   
-  
 Things to do:  
              *  Sync Boss Phases to doubled hp  
              *  Spawns that are already duped  
@@ -49,7 +49,6 @@ Things to do:
              *  Mimics get deleted   
              *  Arenas  
              *    
-             *  Pale Lurker  
              *  OW Nosk  
              *  OW CG and EG   
              *  Potentially dupe Xero spawn swords  

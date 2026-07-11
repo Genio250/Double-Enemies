@@ -19,18 +19,21 @@ namespace DoubleEnemies
             "Mantis Lord S3", "Mega Jellyfish", "Lobster", "Mega Moss Charger", "Hornet Nosk", "Mega Jellyfish GG", "Hive Knight", "Sly Boss",
             "Oro", "Mato", "Black Knight 1", "Black Knight 2", "Black Knight 3", "Black Knight 4", "Black Knight 5", "Black Knight 6",
             "Mega Zombie Beam Miner (1)", "Zombie Beam Miner Rematch", "Royal Gaurd", "Royal Gaurd (1)", "Mushroom Brawler 1",
-            "Mushroom Brawler 2",
+            "Mushroom Brawler 2", "Pale Lurker", "Flamebearer Small(Clone)", "Flamebearer Med(Clone)", "Flamebearer Large(Clone)",
             "Black Knight 7", "Black Knight 8", "Black Knight 9", "Black Knight 10", "Black Knight 11", "Black Knight 12", "Black Knight 13",
-            "Black Knight 14", "Black Knight 15"];
+            "Black Knight 14", "Black Knight 15", "Cagney Carnation", "Dryya2(Clone)"];
 
-        public static List<string> Exceptions = ["Radiance", "Head", "Tinger", "Mantis Lord"];
+        public static List<string> Exceptions = ["Radiance", "Head", "Tinger", "Mantis Lord", "Hegemol", "Zemer", "Isma", "Tiso"];
+
+        public static List<string> Tripled = ["Dream Mage Lord Phase2", "Mini Flower", "Chomper"];
 
         public static List<string> Offset = ["Turret", "Plant Trap", "Acid Walker", "Ceiling Dropper", "Abyss Crawler", "Egg Sac",
         "Crystallised Lazer Bug", "Mines Crawler", "Great Shield Zombie Bottom", "Moss Knight", "Mantis", "Fung Crawler", "Flip Hopper"];
     }
     public static class Toggles
     {
-        public static bool mod = true, QoL = false, Everwatchers = false;
+        public static bool mod = true, onlyboss = false, drops = true;
+        public static bool QoL = false, Everwatchers = false, Cagney = false, PaleCourt = false;
         public static int amount;
     }
 }

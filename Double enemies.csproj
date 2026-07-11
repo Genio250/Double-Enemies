@@ -58,6 +58,9 @@
     <Reference Include="Assembly-CSharp-firstpass">
       <HintPath>$(HollowKnightRefs)/Assembly-CSharp-firstpass.dll</HintPath>
     </Reference>
+    <Reference Include="CagneyCarnation">
+      <HintPath>Dependencies\CagneyCarnation.dll</HintPath>
+    </Reference>
     <Reference Include="Everwatchers">
       <HintPath>Dependencies\Everwatchers.dll</HintPath>
     </Reference>
@@ -87,6 +90,9 @@
     </Reference>
     <Reference Include="Newtonsoft.Json">
       <HintPath>$(HollowKnightRefs)/Newtonsoft.Json.dll</HintPath>
+    </Reference>
+    <Reference Include="PaleCourt">
+      <HintPath>Dependencies\PaleCourt.dll</HintPath>
     </Reference>
     <Reference Include="PlayMaker">
       <HintPath>$(HollowKnightRefs)/PlayMaker.dll</HintPath>

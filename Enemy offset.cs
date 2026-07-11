@@ -20,14 +20,15 @@ namespace DoubleEnemies
             if (enemy.name == "Jellyfish GG(Clone)")
                 New.transform.position = enemy.transform.position + spawn3 * 3;
 
-            if (enemy.name.Contains("Buzzer") && !enemy.name.Contains("Giant"))
+            if (enemy.name.Contains("Buzzer") && !enemy.name.Contains("Giant") || enemy.name.Contains("Mini Flower"))
             {
                 if (GameManager.instance.sceneName == "GG_Collector" || GameManager.instance.sceneName == "Ruins2_11")
                     spawn3 = new Vector3(Math.Abs(spawn2.x), Math.Abs(spawn2.y), 0);
                 New.transform.position = enemy.transform.position + spawn3 * 2;
             }
 
-            if (enemy.name.Contains("Mage Balloon Spawner") || enemy.name.Contains("White Palace Fly"))
+            if (enemy.name.Contains("Mage Balloon Spawner") || enemy.name.Contains("White Palace Fly") || enemy.name.Contains("Chomper"))
+                
                 New.transform.position = enemy.transform.position + spawn3;
 
             float offset = UnityEngine.Random.Range(-1f, 1f);
