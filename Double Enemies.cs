@@ -25,6 +25,7 @@ using UnityEngine.SceneManagement;
 using UnityEngine.Timeline;
 using UnityEngine.UIElements;
 using static Mono.Security.X509.X520;
+using static UnityEngine.GraphicsBuffer;
 
 namespace DoubleEnemies
 {
@@ -32,7 +33,7 @@ namespace DoubleEnemies
     public class DoubleEnemies : Mod, IMenuMod
     {
         public DoubleEnemies() : base("Double Enemies") { }
-        public override string GetVersion() => "1.1.3";
+        public override string GetVersion() => "1.1.4";
         public bool ToggleButtonInsideMenu => false;
 
 
@@ -103,22 +104,6 @@ namespace DoubleEnemies
             }
         }
 
-       /* void Filler()
-        {
-            GameObject MossyDupe = GameObject.Find("Mega Moss Charger(EnemyDupe)");
-            PlayMakerFSM fsm = MossyDupe.LocateMyFSM("Mossy Control");
-            fsm.SendEvent("WAKE");
-            fsm.Fsm.GetState("Hidden").Actions[0] = new CustomFsmAction()
-            {
-                method = () => {
-                    fsm.SetState("Emerge Pause");
-                }
-            };
-
-            Log(fsm.ActiveStateName);
-            Log(fsm.FsmVariables.FindFsmInt("P2 HP").Value);
-        }*/
-
         void Bow()
         {
 
@@ -145,7 +130,7 @@ namespace DoubleEnemies
                 ModHooks.BeforeSceneLoadHook += ModHooks_BeforeSceneLoadHook;
                 togglerer = 0;
             }
-            /*if (Input.GetKeyDown(KeyCode.K))
+            /*if (Input.GetKeyDown(KeyCode.P))
             {
                 Log("Attempting to give AI");
                 Test();
@@ -195,7 +180,6 @@ namespace DoubleEnemies
                 else if (enemy.name.Contains("Grimm Boss")) { wait = 0.1f; tp = true; }
                 else if (enemy.name.Contains("Giant Fly")) wait = 0.5f;
                 else if (enemy.name.Contains("False Knight New")) { wait = 0.3f; tp = true; }
-                else if (enemy.name.Contains("Hornet Boss 1")) { wait = 3; tp = true; }
                 else if (enemy.name.Contains("Zombie Beam Miner Rematch")) { wait = 3; tp = true; }
                 else wait = 0;
 
@@ -210,6 +194,11 @@ namespace DoubleEnemies
                             skip = true;
                         }
                     }
+                }
+
+                if (GameManager.instance.sceneName == "Mines_18" || GameManager.instance.sceneName == "Mines_32")
+                {
+                    skip = true;
                 }
 
                 if (enemy.name.Contains("Dryya2(Clone)"))
@@ -240,7 +229,18 @@ namespace DoubleEnemies
                 {
                     Satchel.CoroutineHelper.WaitForSecondsBeforeInvoke(wait, () => Duplicate(enemy, tp));
                 }
-
+                if (enemy.name == "Hornet Boss 1")
+                    Satchel.CoroutineHelper.WaitForSecondsBeforeInvoke(2, () =>
+                    {
+                        GameObject.Find("Hornet Boss 1(EnemyDupe)").transform.position = enemy.transform.position;
+                        Satchel.CoroutineHelper.WaitForSecondsBeforeInvoke(1, () => Hornet.HornetAI());
+                    });
+                if (enemy.name == "Hornet Boss 2")
+                    Satchel.CoroutineHelper.WaitForSecondsBeforeInvoke(0.5f, () =>
+                    {
+                        GameObject.Find("Hornet Boss 2(EnemyDupe)").transform.position = enemy.transform.position;
+                        Satchel.CoroutineHelper.WaitForSecondsBeforeInvoke(0.1f, () => Hornet.HornetAI());
+                    });
                 if (enemy.name == "Oro")
                     Satchel.CoroutineHelper.WaitForSecondsBeforeInvoke(1, () => OroYMato.OroYMatoAI());
                 if (enemy.name.Contains("Mega Moss Charger"))
@@ -271,6 +271,8 @@ namespace DoubleEnemies
                     Satchel.CoroutineHelper.WaitForSecondsBeforeInvoke(0.5f, () => SMaster.SMasterAI());
                 if (enemy.name.Contains("Dream Mage Lord") && !enemy.name.Contains("Phase2"))
                     Satchel.CoroutineHelper.WaitForSecondsBeforeInvoke(0.5f, () => STyrant.STyrantAI());
+                if (enemy.name.Contains("Xero"))
+                    Satchel.CoroutineHelper.WaitForSecondsBeforeInvoke(1, () => Xero.XeroAI());
                 if (enemy.name.Contains("Pale Lurker"))
                     Satchel.CoroutineHelper.WaitForSecondsBeforeInvoke(0.5f, () => PaleLurker.LurkerAI());
                 if (enemy.name.Contains("Flamebearer"))
@@ -329,7 +331,6 @@ namespace DoubleEnemies
              *  
              *  OW Nosk
              *  OW CG and EG 
-             *  Potentially dupe Xero spawn swords
              *  Idk why ascended warrior sometimes tps oob
              *  Fix OW Galien Scythe
              *  OW Uumuu

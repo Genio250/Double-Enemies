@@ -17,10 +17,10 @@ Dependencies:
 If you find any enemy not listed that is broken or doesn't get duped, let me know.  
   
 Exceptions:  
-    * Any an all enemies that are spawned off bounds and summoned through a teleport. For example: Aspid Hatchlings  
-    * The vengefly king in the first trial  
-    * First Trial Vengefly King  
-    * Some dumb random enemies  
+    * Any an all enemies that are spawned off bounds and summoned through a teleport. For example: Aspid Hatchlings.  
+    * The vengefly king in the first trial.  
+    * Crystal and Enraged Guardian in the overworld.   
+    * Some dumb random enemies.  
   
 Supported Mods:  
     * Everwatchers: All 4 difficulties. Toggle and HP share not supported.  
@@ -32,10 +32,9 @@ Supported Mods:
 Known issues:  
     * Colosseum waves are not edited so some can be skipped, most notably the final bosses    
     * False Knight doesn't double its hp  
-    * Mantis Lords and SoB phase 2 duplicates are phase 1 mantis lords, so they don't do coordinated attacks  
-    * Hornet 1 gets stuck after throwing a needle  
+    * Mantis Lords and SoB phase 2 duplicates are phase 1 mantis lords, so they don't do coordinated attacks   
     * Galien duplicate scythe spawns early in the overworld  
-    * Overworld Uumuu can't be popped by Quirell and runs out of attacks  
+    * The Overworld Uumuu copy can't be popped by Quirell and runs out of attacks  
     * Some enemies like Grub mimics just cannot be duplicated  
     * With QoL enabled, Nosk in the overworld spawns funnily  
     * Soul Warrior in his ascended arena sometimes teleports out of bounds  
@@ -51,7 +50,6 @@ Things to do:
              *    
              *  OW Nosk  
              *  OW CG and EG   
-             *  Potentially dupe Xero spawn swords  
              *  Idk why ascended warrior sometimes tps oob  
              *  Fix OW Galien Scythe  
              *  OW Uumuu  
