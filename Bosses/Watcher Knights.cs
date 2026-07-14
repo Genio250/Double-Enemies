@@ -19,38 +19,7 @@ namespace DoubleEnemies
         {
             if (Toggles.Everwatchers && GameManager.instance.sceneName.Contains("GG"))
             {
-                int level = Everwatchers.Everwatchers.GlobalSettings.ReanimationLevel;
-                Modding.Logger.Log(level);
-
-                Everwatcherer("1");
-                Everwatcherer("2");
-                Everwatcherer("3");
-                Everwatcherer("4");
-                Everwatcherer("5");
-                Everwatcherer("6");
-                if(level >= 1)
-                {
-                    Everwatcherer("7");
-                    Everwatcherer("8");
-                    Everwatcherer("9");
-                    Everwatcherer("10");
-                }
-                if(level >= 2)
-                {
-                    Everwatcherer("11");
-                    Everwatcherer("12");
-                }
-                if (level >= 3)
-                {
-                    Everwatcherer("13");
-                    Everwatcherer("14");
-                    Everwatcherer("15");
-                }
-
-                GameObject Battle = GameObject.Find("Battle Control");
-                PlayMakerFSM fsm = Battle.LocateMyFSM("Battle Control");
-                fsm.FsmVariables.GetFsmInt("Battle Enemies").Value *= 2;
-                Modding.Logger.Log(fsm.FsmVariables.GetFsmInt("Battle Enemies").Value);
+                EverwatcherSpawn();
             }
             else
             {
@@ -128,6 +97,42 @@ namespace DoubleEnemies
                 fsm.GetValidState("Knight 5").GetFirstActionOfType<IntCompare>().integer2 = new FsmInt { Value = 4 };
             }
 
+        }
+
+        public static void EverwatcherSpawn()
+        {
+            int level = Everwatchers.Everwatchers.GlobalSettings.ReanimationLevel;
+            Modding.Logger.Log(level);
+
+            Everwatcherer("1");
+            Everwatcherer("2");
+            Everwatcherer("3");
+            Everwatcherer("4");
+            Everwatcherer("5");
+            Everwatcherer("6");
+            if (level >= 1)
+            {
+                Everwatcherer("7");
+                Everwatcherer("8");
+                Everwatcherer("9");
+                Everwatcherer("10");
+            }
+            if (level >= 2)
+            {
+                Everwatcherer("11");
+                Everwatcherer("12");
+            }
+            if (level >= 3)
+            {
+                Everwatcherer("13");
+                Everwatcherer("14");
+                Everwatcherer("15");
+            }
+
+            GameObject Battle = GameObject.Find("Battle Control");
+            PlayMakerFSM fsm = Battle.LocateMyFSM("Battle Control");
+            fsm.FsmVariables.GetFsmInt("Battle Enemies").Value *= 2;
+            Modding.Logger.Log(fsm.FsmVariables.GetFsmInt("Battle Enemies").Value);
         }
 
         public static void Everwatcherer(string s)
