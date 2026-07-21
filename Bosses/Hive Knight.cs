@@ -19,7 +19,8 @@ namespace DoubleEnemies
             PlayMakerFSM fsm = Boss.LocateMyFSM(control);
             GameObject BossDupe = GameObject.Find(name + "(EnemyDupe)");
             PlayMakerFSM fsmd = BossDupe.LocateMyFSM(control);
-            fsmd.SendEvent("WAKE");
+
+            
             fsm.FsmVariables.FindFsmInt("P2 HP").Value *= 2;
             fsm.FsmVariables.FindFsmInt("P3 HP").Value *= 2;
             fsmd.FsmVariables.FindFsmInt("P2 HP").Value *= 2;
@@ -198,6 +199,40 @@ namespace DoubleEnemies
                     Bee7FSM.SendEvent("SWARM");
                 }
             };
+
+            if (GameManager.instance.sceneName.Contains("GG"))
+            {
+                fsmd.SendEvent("WAKE");
+            }
+            else
+            {
+                GameObject battle = GameObject.Find("Battle Scene");
+                PlayMakerFSM bfsm = battle.LocateMyFSM("Control");
+                bfsm.AddCustomAction("Hive Knight", () =>
+                {
+                    fsmd.SendEvent("WAKE");
+                });
+
+                bfsm.Fsm.GetState("Droppers").Actions[0] = new CustomFsmAction()
+                {
+                    method = () => {
+                        Bee1FSMDupe.SendEvent("SWARM");
+                        Bee1FSM.SendEvent("SWARM");
+                        Bee2FSMDupe.SendEvent("SWARM");
+                        Bee2FSM.SendEvent("SWARM");
+                        Bee3FSMDupe.SendEvent("SWARM");
+                        Bee3FSM.SendEvent("SWARM");
+                        Bee4FSMDupe.SendEvent("SWARM");
+                        Bee4FSM.SendEvent("SWARM");
+                        Bee5FSMDupe.SendEvent("SWARM");
+                        Bee5FSM.SendEvent("SWARM");
+                        Bee6FSMDupe.SendEvent("SWARM");
+                        Bee6FSM.SendEvent("SWARM");
+                        Bee7FSMDupe.SendEvent("SWARM");
+                        Bee7FSM.SendEvent("SWARM");
+                    }
+                };
+            }
         }
     }
 }
