@@ -11,7 +11,7 @@ using UnityEngine;
 
 namespace DoubleEnemies
 {
-    public static class Grimmkin
+    public static partial class Enemies
     {
         public static string current;
 
