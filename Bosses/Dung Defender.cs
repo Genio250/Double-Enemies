@@ -13,8 +13,8 @@ namespace DoubleEnemies
 {
     public static partial class Bosses
     {
-        private static int DAvoider = 0;
-        private static void DungFollow()
+        private static int DungDefAvoider = 0;
+        private static void DungDefFollow()
         {
             if (GameManager.instance.sceneName == "GG_Dung_Defender" || GameManager.instance.sceneName == "Waterways_05")
             {
@@ -22,10 +22,10 @@ namespace DoubleEnemies
                 GameObject DD = GameObject.Find("Dung Defender(EnemyDupe)");
                 if(DD != null) Burrow.transform.position = new Vector3(DD.transform.position.x, Burrow.transform.position.y, Burrow.transform.position.z);
             }
-            else if (DAvoider == 1)
+            else if (DungDefAvoider == 1)
             {
-                DAvoider--;
-                ModHooks.HeroUpdateHook -= DungFollow;
+                DungDefAvoider--;
+                ModHooks.HeroUpdateHook -= DungDefFollow;
             }
         }
 
@@ -39,8 +39,8 @@ namespace DoubleEnemies
 
             Dfsm.FsmVariables.GetFsmGameObject("Burrow Effect").Value = Burrow2;
 
-            ModHooks.HeroUpdateHook += DungFollow;
-            Avoider = 1;
+            ModHooks.HeroUpdateHook += DungDefFollow;
+            DungDefAvoider = 1;
         }
     }
 }

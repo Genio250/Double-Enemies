@@ -13,7 +13,7 @@ namespace DoubleEnemies
 {
     public static partial class Bosses
     {
-        public static void BeamerEG(string s, PlayMakerFSM fsm)
+        public static void EnragedBeamer(string s, PlayMakerFSM fsm)
         {
             GameObject Beam = GameObject.Find(s);
             GameObject Beam2 = GameObject.Instantiate(Beam);
@@ -26,7 +26,7 @@ namespace DoubleEnemies
             fsm.FsmVariables.FindFsmGameObject(s).Value = Beam2;
         }
 
-        public static PlayMakerFSM RainerEG(char n)
+        public static PlayMakerFSM EnragedRainer(char n)
         {
             GameObject Rain = null;
             if(n == '0') Rain = GameObject.Find("Laser Turret Mega");
@@ -41,14 +41,14 @@ namespace DoubleEnemies
             GameObject CG = GameObject.Find("Zombie Beam Miner Rematch(EnemyDupe)");
             PlayMakerFSM fsm = CG.LocateMyFSM("Beam Miner");
 
-            BeamerEG("Beam", fsm);
-            BeamerEG("Beam Ball", fsm);
-            BeamerEG("Beam Impact", fsm);
+            EnragedBeamer("Beam", fsm);
+            EnragedBeamer("Beam Ball", fsm);
+            EnragedBeamer("Beam Impact", fsm);
 
-            PlayMakerFSM Rain1 = RainerEG('0');
-            PlayMakerFSM Rain2 = RainerEG('1');
-            PlayMakerFSM Rain3 = RainerEG('2');
-            PlayMakerFSM Rain4 = RainerEG('3');
+            PlayMakerFSM Rain1 = EnragedRainer('0');
+            PlayMakerFSM Rain2 = EnragedRainer('1');
+            PlayMakerFSM Rain3 = EnragedRainer('2');
+            PlayMakerFSM Rain4 = EnragedRainer('3');
 
             fsm.Fsm.GetState("Laser Shoot").Actions[0] = new CustomFsmAction()
             {
@@ -61,10 +61,10 @@ namespace DoubleEnemies
                 }
             };
 
-            ModHooks.HeroUpdateHook += DeleterDeleterEG;
+            ModHooks.HeroUpdateHook += EnragedDeleter;
         }
 
-        private static void DeleterDeleterEG()
+        private static void EnragedDeleter()
         {
             GameObject go = GameObject.Find("Zombie Beam Miner Rematch(EnemyDupe)");
             if (go == null)
@@ -73,7 +73,7 @@ namespace DoubleEnemies
                 GameObject.Destroy(GameObject.Find("Beam Ball(EnemyDupe)"));
                 GameObject.Destroy(GameObject.Find("Beam Impact(EnemyDupe)"));
                 Modding.Logger.Log("Success");
-                ModHooks.HeroUpdateHook -= DeleterDeleterEG;
+                ModHooks.HeroUpdateHook -= EnragedDeleter;
             }
         }
     }

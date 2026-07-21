@@ -33,10 +33,10 @@ namespace DoubleEnemies
                 fsm.FsmVariables.GetFsmInt("Battle Enemies").Value *= 4;
             }, 1);
 
-            ModHooks.HeroUpdateHook += ModHooks_HeroUpdateHook1;
+            ModHooks.HeroUpdateHook += GruzCorpseFinder;
         }
 
-        private static void ModHooks_HeroUpdateHook1()
+        private static void GruzCorpseFinder()
         {
             GameObject Burster = GameObject.Find("Corpse Big Fly Burster(Clone)");
             if (Burster != null)
@@ -117,7 +117,7 @@ namespace DoubleEnemies
 
 
                 });
-                ModHooks.HeroUpdateHook -= ModHooks_HeroUpdateHook1;
+                ModHooks.HeroUpdateHook -= GruzCorpseFinder;
             }
         }
 

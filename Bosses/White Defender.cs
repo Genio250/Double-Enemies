@@ -13,8 +13,8 @@ namespace DoubleEnemies
 {
     public static partial class Bosses
     {
-        private static int Avoider = 0;
-        private static void ModHooks_HeroUpdateHook()
+        private static int WhiteDefAvoider = 0;
+        private static void WhiteDefFollow()
         {
             if (GameManager.instance.sceneName.Contains("White_Defender"))
             {
@@ -22,10 +22,10 @@ namespace DoubleEnemies
                 GameObject WD = GameObject.Find("White Defender(EnemyDupe)");
                 if(WD != null) Burrow.transform.position = new Vector3(WD.transform.position.x, Burrow.transform.position.y, Burrow.transform.position.z);
             }
-            else if (Avoider == 1)
+            else if (WhiteDefAvoider == 1)
             {
-                Avoider--;
-                ModHooks.HeroUpdateHook -= ModHooks_HeroUpdateHook;
+                WhiteDefAvoider--;
+                ModHooks.HeroUpdateHook -= WhiteDefFollow;
             }
         }
 
@@ -40,8 +40,8 @@ namespace DoubleEnemies
             Dfsm.FsmVariables.GetFsmGameObject("Burrow Effect").Value = Burrow2;
             Dfsm.RemoveAction("Init 2", 0);
 
-            ModHooks.HeroUpdateHook += ModHooks_HeroUpdateHook;
-            Avoider = 1;
+            ModHooks.HeroUpdateHook += WhiteDefFollow;
+            WhiteDefAvoider = 1;
         }
     }
 }

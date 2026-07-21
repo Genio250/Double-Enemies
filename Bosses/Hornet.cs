@@ -13,18 +13,18 @@ namespace DoubleEnemies
 {
     public static partial class Bosses
     {
-        public static GameObject GNeedle = null, GTink = null;
-        public static int FullHP = 0;
+        public static GameObject HornetNeedle = null, HornetTink = null;
+        public static int HornetFullHP = 0;
         public static void HornetAI()
         {
             GameObject Hornet = GameObject.Find("Hornet Boss 1(EnemyDupe)");
             if (Hornet == null)
             {
                 Hornet = GameObject.Find("Hornet Boss 2(EnemyDupe)");
-                FullHP = Hornet.GetComponent<HealthManager>().hp;
-                Modding.Logger.Log(FullHP);
-                Modding.Logger.Log(2 * FullHP / 3);
-                PhaseFix();
+                HornetFullHP = Hornet.GetComponent<HealthManager>().hp;
+                Modding.Logger.Log(HornetFullHP);
+                Modding.Logger.Log(2 * HornetFullHP / 3);
+                HornetPhaseFix();
             }
             PlayMakerFSM fsm = Hornet.LocateMyFSM("Control");
 
@@ -37,8 +37,8 @@ namespace DoubleEnemies
             GameObject Tink = GameObject.Instantiate(TinkOrig);
             Tink.name = "Needle Tink(EnemyDupe)";
 
-            GNeedle = Needle;
-            GTink = Tink;
+            HornetNeedle = Needle;
+            HornetTink = Tink;
 
             fsm.FsmVariables.GetFsmGameObject("Needle").Value = Needle;
             fsmn.RemoveAction("Init", 0);
@@ -47,19 +47,19 @@ namespace DoubleEnemies
                 fsmn.FsmVariables.GetFsmGameObject("Parent").Value = Hornet;
             }, 0);
 
-            ModHooks.HeroUpdateHook += NeedleFollow;
+            ModHooks.HeroUpdateHook += HornetNeedleFollow;
         }
 
-        private static void NeedleFollow()
+        private static void HornetNeedleFollow()
         {
-            if(GNeedle != null)
+            if(HornetNeedle != null)
             {
-                GTink.transform.position = GNeedle.transform.position;
+                HornetTink.transform.position = HornetNeedle.transform.position;
             }
-            else ModHooks.HeroUpdateHook -= NeedleFollow;
+            else ModHooks.HeroUpdateHook -= HornetNeedleFollow;
         }
 
-        private static void PhaseFix()
+        private static void HornetPhaseFix()
         {
             GameObject Hornet1 = GameObject.Find("Hornet Boss 2");
             GameObject Hornet2 = GameObject.Find("Hornet Boss 2(EnemyDupe)");
@@ -70,7 +70,7 @@ namespace DoubleEnemies
             {
                 method = () =>
                 {
-                    if(Hornet1.GetComponent<HealthManager>().hp > 2 * FullHP / 3)
+                    if(Hornet1.GetComponent<HealthManager>().hp > 2 * HornetFullHP / 3)
                     {
                         fsm1.SendEvent("FINISHED");
                     }
@@ -81,7 +81,7 @@ namespace DoubleEnemies
             {
                 method = () =>
                 {
-                    if (Hornet2.GetComponent<HealthManager>().hp > 2 * FullHP / 3)
+                    if (Hornet2.GetComponent<HealthManager>().hp > 2 * HornetFullHP / 3)
                     {
                         fsm2.SendEvent("FINISHED");
                     }
