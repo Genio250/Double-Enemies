@@ -120,11 +120,7 @@ namespace DoubleEnemies
 
         void Bow()
         {
-            GameObject Nosk2 = GameObject.Find("Mimic Spider(EnemyDupe)");
-            PlayMakerFSM fsm2 = Nosk2.LocateMyFSM("Mimic Spider");
-            Log(fsm2.ActiveStateName);
-            fsm2.SetState("Encountered");
-            Log(fsm2.ActiveStateName);
+            Log(PlayerData.instance.GetInt("flamesCollected"));
         }
 
         void Test()
@@ -340,7 +336,7 @@ namespace DoubleEnemies
                 if (enemy.name.Contains("Pale Lurker"))
                     Satchel.CoroutineHelper.WaitForSecondsBeforeInvoke(0.5f, () => Bosses.LurkerAI());
                 if (enemy.name.Contains("Flamebearer"))
-                    Satchel.CoroutineHelper.WaitForSecondsBeforeInvoke(0.5f, () => Grimmkin.GrimmkinAI(enemy.name));
+                    Satchel.CoroutineHelper.WaitForSecondsBeforeInvoke(0.5f, () => Enemies.GrimmkinAI(enemy.name));
                 if (enemy.name.Contains("Cagney Carnation") && Toggles.Cagney == true)
                     Satchel.CoroutineHelper.WaitForSecondsBeforeInvoke(0.5f, () => Cagney.CagneyAI());
                 if (enemy.name.Contains("Dryya2(Clone)") && Toggles.PaleCourt == true)
@@ -351,7 +347,7 @@ namespace DoubleEnemies
                     Satchel.CoroutineHelper.WaitForSecondsBeforeInvoke(0.1f, () => Hegemol.HegemolAI());
                 if (enemy.name.Contains("Zemer(Clone)") && Toggles.PaleCourt == true)
                     Satchel.CoroutineHelper.WaitForSecondsBeforeInvoke(0.1f, () => Zemer.ZemerAI());
-                if (enemy.name.Contains("Hatcher") && !enemy.name.Contains("Baby Spawner")) Hatcher.HatcherAI(enemy);
+                if (enemy.name.Contains("Hatcher") && !enemy.name.Contains("Baby Spawner")) Enemies.HatcherAI(enemy);
                 if (enemy.name.Contains("Mushroom Brawler 1"))
                     Satchel.CoroutineHelper.WaitForSecondsBeforeInvoke(1, () => Arenas.Ogres());
 
