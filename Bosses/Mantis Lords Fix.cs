@@ -9,7 +9,7 @@ using UnityEngine;
 
 namespace DoubleEnemies
 {
-    public static class MantisFix
+    public static partial class Bosses
     {
         public static void MantisLords(bool Mantis, GameObject enemy)
         {

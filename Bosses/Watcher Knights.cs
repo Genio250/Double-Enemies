@@ -13,7 +13,7 @@ using UnityEngine;
 
 namespace DoubleEnemies
 {
-    public static class Watchers
+    public static partial class Bosses
     {
         public static void WatchersAI()
         {

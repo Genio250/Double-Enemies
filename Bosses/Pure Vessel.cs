@@ -10,7 +10,7 @@ using UnityEngine;
 
 namespace DoubleEnemies
 {
-    public static class PureVessel
+    public static partial class Bosses
     {
         public static void PVSkip()
         {

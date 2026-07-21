@@ -11,7 +11,7 @@ using UnityEngine;
 
 namespace DoubleEnemies
 {
-    public static class Hornet
+    public static partial class Bosses
     {
         public static GameObject GNeedle = null, GTink = null;
         public static int FullHP = 0;

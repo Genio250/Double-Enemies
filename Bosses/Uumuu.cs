@@ -11,7 +11,7 @@ using UnityEngine;
 
 namespace DoubleEnemies
 {
-    public static class Uumuu
+    public static partial class Bosses
     {
         public static void UumuuAI()
         {

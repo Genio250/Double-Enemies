@@ -11,7 +11,7 @@ using UnityEngine;
 
 namespace DoubleEnemies
 {
-    public static class WD
+    public static partial class Bosses
     {
         private static int Avoider = 0;
         private static void ModHooks_HeroUpdateHook()
