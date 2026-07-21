@@ -1,6 +1,11 @@
-﻿using CagneyCarnation;
+﻿global using static Modding.Logger;
+using CagneyCarnation;
 using Everwatchers;
+using FiveKnights;
 using FiveKnights.Dryya;
+using FiveKnights.Hegemol;
+using FiveKnights.Tiso;
+using FiveKnights.Zemer;
 using HutongGames.PlayMaker;
 using HutongGames.PlayMaker.Actions;
 using IL;
@@ -26,6 +31,7 @@ using UnityEngine.Timeline;
 using UnityEngine.UIElements;
 using static Mono.Security.X509.X520;
 using static UnityEngine.GraphicsBuffer;
+using static UnityEngine.ParticleSystem;
 
 namespace DoubleEnemies
 {
@@ -58,6 +64,13 @@ namespace DoubleEnemies
                     Loader = () => Toggles.onlyboss ? 0 : 1
                 },new IMenuMod.MenuEntry
                 {
+                    Name = "Crazy Colo",
+                    Description = "Disable the fixed wave emission and have a billion enemies at once!",
+                    Values = new string[] { "Off", "On" },
+                    Saver = (i) => Toggles.onlyboss = i == 0,
+                    Loader = () => Toggles.onlyboss ? 0 : 1
+                },new IMenuMod.MenuEntry
+                {
                     Name = "Duplicate Drops",
                     Description = "Duplicate special enemy drops such as Grimmkin Flames",
                     Values = new string[] { "Off", "On" },
@@ -76,7 +89,8 @@ namespace DoubleEnemies
             ModHooks.OnEnableEnemyHook += ModHooks_OnEnableEnemyHook;
             ModHooks.BeforeSceneLoadHook += ModHooks_BeforeSceneLoadHook;
             ModHooks.HeroUpdateHook += ModHooks_HeroUpdateHook;
-            Galien.Initialize();
+            UnityEngine.SceneManagement.SceneManager.activeSceneChanged += SceneManager_activeSceneChanged;
+            //Bosses.Initialize();
             HPShare.Initialize();
 
             if (ModHooks.GetMod("QoL") is Mod)
@@ -106,12 +120,18 @@ namespace DoubleEnemies
 
         void Bow()
         {
-
+            GameObject Nosk2 = GameObject.Find("Mimic Spider(EnemyDupe)");
+            PlayMakerFSM fsm2 = Nosk2.LocateMyFSM("Mimic Spider");
+            Log(fsm2.ActiveStateName);
+            fsm2.SetState("Encountered");
+            Log(fsm2.ActiveStateName);
         }
 
         void Test()
         {
-
+            Log(PlayerData.instance.GetInt("flamesCollected"));
+            PlayerData.instance.SetInt("flamesCollected", PlayerData.instance.GetInt("flamesCollected") + 1);
+            Log(PlayerData.instance.GetInt("flamesCollected"));
         }
 
         private void ModHooks_HeroUpdateHook()
@@ -130,13 +150,13 @@ namespace DoubleEnemies
                 ModHooks.BeforeSceneLoadHook += ModHooks_BeforeSceneLoadHook;
                 togglerer = 0;
             }
-            /*if (Input.GetKeyDown(KeyCode.P))
+            if (Input.GetKeyDown(KeyCode.P))
             {
                 Log("Attempting to give AI");
                 Test();
             }
 
-            /*if (Input.GetKeyDown(KeyCode.I))
+            if (Input.GetKeyDown(KeyCode.I))
             {
                 Log("Attempting to give AI");
                 Bow();
@@ -149,7 +169,33 @@ namespace DoubleEnemies
             }*/
         }
 
+        public void SceneManager_activeSceneChanged(Scene arg0, Scene arg1)
+        {
+            GameManager.instance.StartCoroutine(RoomFixes(arg1));
+        }
 
+        public IEnumerator RoomFixes(Scene arg)
+        {
+            yield return new WaitForFinishedEnteringScene();
+            Log(arg.name);
+            string s = arg.name;
+            if (s == "Crossroads_08")
+            {
+                Arenas.Aspids();
+            }
+            else if (s == "Crossroads_04")
+            {
+
+            }
+            else if (s == "GG_Ghost_Galien" || s == "Deepnest_40")
+            {
+                Bosses.GalienScythe();
+            }
+            else if (s == "Room_Colosseum_Bronze")
+            {
+                Arenas.Colo1();
+            }
+        }
 
         private string ModHooks_BeforeSceneLoadHook(string arg)
         {
@@ -158,6 +204,8 @@ namespace DoubleEnemies
                 Log("PreHornet");
                 PlayerData.instance.SetInt("hornetGreenpath", 4);
             }
+
+
             return arg;
         }
 
@@ -196,9 +244,13 @@ namespace DoubleEnemies
                     }
                 }
 
-                if (GameManager.instance.sceneName == "Mines_18" || GameManager.instance.sceneName == "Mines_32")
+                if (enemy.name.Contains("Giant Buzzer Col") && GameManager.instance.sceneName == "Room_Colosseum_Bronze") skip = true;
+                if (GameManager.instance.sceneName == "Mines_18" || GameManager.instance.sceneName == "Mines_32") skip = true;
+
+                if (GameManager.instance.sceneName == "Fungus3_39" && enemy.name.Contains("Acid Walker"))
                 {
                     skip = true;
+                    GameObject.Destroy(enemy);
                 }
 
                 if (enemy.name.Contains("Dryya2(Clone)"))
@@ -229,62 +281,84 @@ namespace DoubleEnemies
                 {
                     Satchel.CoroutineHelper.WaitForSecondsBeforeInvoke(wait, () => Duplicate(enemy, tp));
                 }
+
+
                 if (enemy.name == "Hornet Boss 1")
                     Satchel.CoroutineHelper.WaitForSecondsBeforeInvoke(2, () =>
                     {
                         GameObject.Find("Hornet Boss 1(EnemyDupe)").transform.position = enemy.transform.position;
-                        Satchel.CoroutineHelper.WaitForSecondsBeforeInvoke(1, () => Hornet.HornetAI());
+                        Satchel.CoroutineHelper.WaitForSecondsBeforeInvoke(1, () => Bosses.HornetAI());
                     });
                 if (enemy.name == "Hornet Boss 2")
                     Satchel.CoroutineHelper.WaitForSecondsBeforeInvoke(0.5f, () =>
                     {
                         GameObject.Find("Hornet Boss 2(EnemyDupe)").transform.position = enemy.transform.position;
-                        Satchel.CoroutineHelper.WaitForSecondsBeforeInvoke(0.1f, () => Hornet.HornetAI());
+                        Satchel.CoroutineHelper.WaitForSecondsBeforeInvoke(0.1f, () => Bosses.HornetAI());
                     });
+                if (enemy.name == "Giant Fly" && GameManager.instance.sceneName == "Crossroads_04")
+                    Satchel.CoroutineHelper.WaitForSecondsBeforeInvoke(1, () => Bosses.GruzAI());
                 if (enemy.name == "Oro")
-                    Satchel.CoroutineHelper.WaitForSecondsBeforeInvoke(1, () => OroYMato.OroYMatoAI());
+                    Satchel.CoroutineHelper.WaitForSecondsBeforeInvoke(1, () => Bosses.OroYMatoAI());
+                if (enemy.name.Contains("Galien"))
+                    Satchel.CoroutineHelper.WaitForSecondsBeforeInvoke(1, () => Bosses.GalienMinis());
                 if (enemy.name.Contains("Mega Moss Charger"))
-                    Satchel.CoroutineHelper.WaitForSecondsBeforeInvoke(1, () => Mossy.MossyAI());
+                    Satchel.CoroutineHelper.WaitForSecondsBeforeInvoke(1, () => Bosses.MossyAI());
                 if (enemy.name.Contains("Lobster"))
-                    Satchel.CoroutineHelper.WaitForSecondsBeforeInvoke(5.1f, () => GodTamer.LobsterAI());
+                    Satchel.CoroutineHelper.WaitForSecondsBeforeInvoke(5.1f, () => Bosses.LobsterAI());
                 if (enemy.name.Contains("Hornet Nosk"))
-                    Nosket.NosketAI();
+                    Bosses.NosketAI();
+                if (enemy.name.Contains("Mimic Spider"))
+                    Satchel.CoroutineHelper.WaitForSecondsBeforeInvoke(1, () => Bosses.NoskAI());
                 if (enemy.name.Contains("Mega Jellyfish GG"))
-                    Satchel.CoroutineHelper.WaitForSecondsBeforeInvoke(0.5f, () => Uumuu.UumuuAI());
+                    Satchel.CoroutineHelper.WaitForSecondsBeforeInvoke(0.5f, () => Bosses.UumuuAI());
                 if (enemy.name.Contains("Hive Knight"))
-                    Satchel.CoroutineHelper.WaitForSecondsBeforeInvoke(0.5f, () => HiveKnight.HiveKnightAI());
+                    Satchel.CoroutineHelper.WaitForSecondsBeforeInvoke(0.5f, () => Bosses.HiveKnightAI());
                 if (enemy.name.Contains("Sly Boss"))
-                    Satchel.CoroutineHelper.WaitForSecondsBeforeInvoke(0.5f, () => Sly.SlyAI());
+                    Satchel.CoroutineHelper.WaitForSecondsBeforeInvoke(0.5f, () => Bosses.SlyAI());
+                if (enemy.name.Contains("Nightmare Grimm Boss"))
+                    Bosses.NkgAI();
+                if (enemy.name.Contains("HK Prime"))
+                    Bosses.PVSkip();
                 if (enemy.name.Contains("Black Knight 1") && enemy.name.Length != 15)
-                    Satchel.CoroutineHelper.WaitForSecondsBeforeInvoke(0.2f, () => Watchers.WatchersAI());
+                    Satchel.CoroutineHelper.WaitForSecondsBeforeInvoke(0.2f, () => Bosses.WatchersAI());
                 if (enemy.name.Contains("Mega Zombie Beam Miner (1)") && GameManager.instance.sceneName.Contains("GG"))
-                    Satchel.CoroutineHelper.WaitForSecondsBeforeInvoke(0.2f, () => CG.CrystalAI());
+                    Satchel.CoroutineHelper.WaitForSecondsBeforeInvoke(0.2f, () => Bosses.CrystalAI());
                 if (enemy.name.Contains("Zombie Beam Miner Rematch") && GameManager.instance.sceneName.Contains("GG"))
-                    Satchel.CoroutineHelper.WaitForSecondsBeforeInvoke(3.1f, () => EG.EnragedAI());
-                if (enemy.name.Contains("Mushroom Brawler 1"))
-                    Satchel.CoroutineHelper.WaitForSecondsBeforeInvoke(1, () => Ogres.OgresAI());
+                    Satchel.CoroutineHelper.WaitForSecondsBeforeInvoke(3.1f, () => Bosses.EnragedAI());
                 if (enemy.name.Contains("White Defender"))
-                    Satchel.CoroutineHelper.WaitForSecondsBeforeInvoke(1, () => WD.WhiteDefAI());
+                    Satchel.CoroutineHelper.WaitForSecondsBeforeInvoke(1, () => Bosses.WhiteDefAI());
                 if (enemy.name.Contains("Dung Defender"))
-                    Satchel.CoroutineHelper.WaitForSecondsBeforeInvoke(1, () => DungD.DungDefAI());
+                    Satchel.CoroutineHelper.WaitForSecondsBeforeInvoke(1, () => Bosses.DungDefAI());
                 if (enemy.name.Contains("Mage Lord") && !enemy.name.Contains("Phase2") && !enemy.name.Contains("Dream"))
-                    Satchel.CoroutineHelper.WaitForSecondsBeforeInvoke(0.5f, () => SMaster.SMasterAI());
+                    Satchel.CoroutineHelper.WaitForSecondsBeforeInvoke(0.5f, () => Bosses.SMasterAI());
                 if (enemy.name.Contains("Dream Mage Lord") && !enemy.name.Contains("Phase2"))
-                    Satchel.CoroutineHelper.WaitForSecondsBeforeInvoke(0.5f, () => STyrant.STyrantAI());
+                    Satchel.CoroutineHelper.WaitForSecondsBeforeInvoke(0.5f, () => Bosses.STyrantAI());
                 if (enemy.name.Contains("Xero"))
-                    Satchel.CoroutineHelper.WaitForSecondsBeforeInvoke(1, () => Xero.XeroAI());
+                    Satchel.CoroutineHelper.WaitForSecondsBeforeInvoke(1, () => Bosses.XeroAI());
+                if (enemy.name.Contains("Fluke Mother"))
+                    Satchel.CoroutineHelper.WaitForSecondsBeforeInvoke(1, () => Bosses.FlukeAI(enemy));
                 if (enemy.name.Contains("Pale Lurker"))
-                    Satchel.CoroutineHelper.WaitForSecondsBeforeInvoke(0.5f, () => PaleLurker.LurkerAI());
+                    Satchel.CoroutineHelper.WaitForSecondsBeforeInvoke(0.5f, () => Bosses.LurkerAI());
                 if (enemy.name.Contains("Flamebearer"))
                     Satchel.CoroutineHelper.WaitForSecondsBeforeInvoke(0.5f, () => Grimmkin.GrimmkinAI(enemy.name));
                 if (enemy.name.Contains("Cagney Carnation") && Toggles.Cagney == true)
                     Satchel.CoroutineHelper.WaitForSecondsBeforeInvoke(0.5f, () => Cagney.CagneyAI());
                 if (enemy.name.Contains("Dryya2(Clone)") && Toggles.PaleCourt == true)
                     Satchel.CoroutineHelper.WaitForSecondsBeforeInvoke(0.5f, () => Dryya.DryyaAI());
+                if (enemy.name.Contains("Tiso(Clone)") && Toggles.PaleCourt == true)
+                    Satchel.CoroutineHelper.WaitForSecondsBeforeInvoke(0.1f, () => Tiso.TisoAI());
+                if (enemy.name.Contains("Hegemol") && Toggles.PaleCourt == true)
+                    Satchel.CoroutineHelper.WaitForSecondsBeforeInvoke(0.1f, () => Hegemol.HegemolAI());
+                if (enemy.name.Contains("Zemer(Clone)") && Toggles.PaleCourt == true)
+                    Satchel.CoroutineHelper.WaitForSecondsBeforeInvoke(0.1f, () => Zemer.ZemerAI());
+                if (enemy.name.Contains("Hatcher") && !enemy.name.Contains("Baby Spawner")) Hatcher.HatcherAI(enemy);
+                if (enemy.name.Contains("Mushroom Brawler 1"))
+                    Satchel.CoroutineHelper.WaitForSecondsBeforeInvoke(1, () => Arenas.Ogres());
+
 
                 if (enemy.name.Contains("Mantis Lord"))
                 {
-                    MantisFix.MantisLords(Mantis, enemy);
+                    Bosses.MantisLords(Mantis, enemy);
                 }
             }
             
@@ -299,21 +373,16 @@ namespace DoubleEnemies
             if(tp) New.transform.position = enemy.transform.position;
             Modding.Logger.Log("Duping " + enemy.name);
 
-            //Take the actions to fix NKG
-            if (enemy.name.Contains("Nightmare Grimm Boss"))
-            {
-                NKG.NkgAI();
-            }
-
-            if (enemy.name.Contains("HK Prime"))
-            {
-                PureVessel.PVSkip();
-            }
-
             if (enemy.name.Contains("White Defender") && GameManager.instance.sceneName.Contains("GG"))
             {
                 New.LocateMyFSM("Dung Defender").RemoveAction("Init 2", 0);
                 Modding.Logger.Log("DOING");
+            }
+
+            if (enemy.name.Contains("Hatcher Baby Spawner"))
+            {
+                New.transform.parent = GameObject.Find("Hatcher Cage").transform;
+                Modding.Logger.Log(New.transform.parent);
             }
 
             HPShare.DoubleHP(enemy, New);
