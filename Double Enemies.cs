@@ -120,21 +120,18 @@ namespace DoubleEnemies
 
         void Bow()
         {
-            Log(PlayerData.instance.GetInt("flamesCollected"));
-            Log(PlayerData.instance.GetInt("killsFlameBearerSmall"));
-            Log(PlayerData.instance.GetInt("flamesRequired"));
+            PlayMakerFSM fsm = GameObject.Find("Colosseum Manager").LocateMyFSM("Battle Control");
+            fsm.SetState("Wave 29 Obble");
         }
 
         void Test()
         {
-            Log(PlayerData.instance.GetInt("flamesCollected"));
-            PlayerData.instance.SetInt("flamesCollected", PlayerData.instance.GetInt("flamesCollected") + 1);
-            Log(PlayerData.instance.GetInt("flamesCollected"));
+
         }
 
         private void ModHooks_HeroUpdateHook()
         {
-            if (Input.GetKeyDown(KeyCode.P))
+            /*if (Input.GetKeyDown(KeyCode.P))
             {
                 Log("Attempting to give AI");
                 Test();
@@ -162,7 +159,7 @@ namespace DoubleEnemies
                 PlayMakerFSM fsmB = Battle.LocateMyFSM("Battle Control");
                 Log(fsmB.FsmVariables.GetFsmInt("Battle Enemies").Value);
             }*/
-                        if (!Toggles.mod && togglerer == 0)
+            if (!Toggles.mod && togglerer == 0)
             {
                 Log("Toggling off");
                 ModHooks.OnEnableEnemyHook -= ModHooks_OnEnableEnemyHook;
@@ -284,6 +281,7 @@ namespace DoubleEnemies
                 }
 
                 if (enemy.name.Contains("Giant Buzzer Col") && GameManager.instance.sceneName == "Room_Colosseum_Bronze") skip = true;
+                if (enemy.name.Contains("Mega Fat Bee") && GameManager.instance.sceneName == "Room_Colosseum_Silver") skip = true;
                 if (GameManager.instance.sceneName == "Mines_18" || GameManager.instance.sceneName == "Mines_32") skip = true;
 
                 if (GameManager.instance.sceneName == "Fungus3_39" && enemy.name.Contains("Acid Walker"))
