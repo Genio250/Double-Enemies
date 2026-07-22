@@ -29,7 +29,8 @@ namespace DoubleEnemies
         public static List<string> Tripled = ["Dream Mage Lord Phase2", "Mini Flower", "Chomper"];
 
         public static List<string> Offset = ["Turret", "Plant Trap", "Acid Walker", "Ceiling Dropper", "Abyss Crawler", "Egg Sac", "Fat Fluke",
-        "Crystallised Lazer Bug", "Mines Crawler", "Great Shield Zombie Bottom", "Moss Knight", "Mantis", "Fung Crawler", "Flip Hopper", "Zombie Shield"];
+        "Crystallised Lazer Bug", "Mines Crawler", "Great Shield Zombie Bottom", "Moss Knight", "Mantis", "Fung Crawler", "Flip Hopper", "Zombie Shield",
+        "Hopper"];
     }
     public static class Toggles
     {
