@@ -20,7 +20,8 @@ namespace DoubleEnemies
             if (enemy.name == "Jellyfish GG(Clone)")
                 New.transform.position = enemy.transform.position + spawn3 * 3;
 
-            if (enemy.name.Contains("Buzzer") && !enemy.name.Contains("Giant") || enemy.name.Contains("Mini Flower"))
+            if (enemy.name.Contains("Buzzer") && !enemy.name.Contains("Giant") || enemy.name.Contains("Mini Flower") ||
+                (GameManager.instance.sceneName.Contains("Colosseum") && enemy.name == "Colosseum_Armored_Mosquito(Clone)"))
             {
                 if (GameManager.instance.sceneName == "GG_Collector" || GameManager.instance.sceneName == "Ruins2_11")
                     spawn3 = new Vector3(Math.Abs(spawn2.x), Math.Abs(spawn2.y), 0);
