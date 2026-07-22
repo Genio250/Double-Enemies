@@ -80,7 +80,7 @@ namespace DoubleEnemies
             };
         }
         public static int counter = 0, togglerer = 0, trip = 0, dry = 0;
-        public static bool Mantis = true;
+        public static bool Mantis = true, GrimmChild = true;
         public static GameObject MantisLord = null;
 
         public override void Initialize()
@@ -121,6 +121,8 @@ namespace DoubleEnemies
         void Bow()
         {
             Log(PlayerData.instance.GetInt("flamesCollected"));
+            Log(PlayerData.instance.GetInt("killsFlameBearerSmall"));
+            Log(PlayerData.instance.GetInt("flamesRequired"));
         }
 
         void Test()
@@ -132,7 +134,35 @@ namespace DoubleEnemies
 
         private void ModHooks_HeroUpdateHook()
         {
-            if (!Toggles.mod && togglerer == 0)
+            if (Input.GetKeyDown(KeyCode.P))
+            {
+                Log("Attempting to give AI");
+                Test();
+            }
+
+            if (Input.GetKeyDown(KeyCode.I))
+            {
+                Log("Attempting to give AI");
+                Bow();
+            }
+
+            if (Input.GetKeyDown(KeyCode.J))
+            {
+                Log("Bleh");
+
+            }
+
+            if (Input.GetKeyDown(KeyCode.U))
+            {
+                Log(GameObject.Find("Grimm Scene").LocateMyFSM("Initial Scene").ActiveStateName);
+            }
+            /*if (Input.GetKeyDown(KeyCode.K))
+            {
+                GameObject Battle = GameObject.Find("Battle Scene v2");
+                PlayMakerFSM fsmB = Battle.LocateMyFSM("Battle Control");
+                Log(fsmB.FsmVariables.GetFsmInt("Battle Enemies").Value);
+            }*/
+                        if (!Toggles.mod && togglerer == 0)
             {
                 Log("Toggling off");
                 ModHooks.OnEnableEnemyHook -= ModHooks_OnEnableEnemyHook;
@@ -146,50 +176,65 @@ namespace DoubleEnemies
                 ModHooks.BeforeSceneLoadHook += ModHooks_BeforeSceneLoadHook;
                 togglerer = 0;
             }
-            if (Input.GetKeyDown(KeyCode.P))
+            GameObject GrimmUI = GameObject.Find("Grimm Flame UI");
+            if (GrimmUI != null && GrimmChild)
             {
-                Log("Attempting to give AI");
-                Test();
+                GrimmUI.LocateMyFSM("Control").AddCustomAction("Set 1", () =>
+                {
+                    if (PlayerData.instance.GetInt("flamesCollected") > 3)
+                    {
+                        GrimmUI.LocateMyFSM("Control").SendEvent("3");
+                    }
+                    GrimmChild = false;
+                });
             }
-
-            if (Input.GetKeyDown(KeyCode.I))
-            {
-                Log("Attempting to give AI");
-                Bow();
-            }
-            /*if (Input.GetKeyDown(KeyCode.K))
-            {
-                GameObject Battle = GameObject.Find("Battle Scene v2");
-                PlayMakerFSM fsmB = Battle.LocateMyFSM("Battle Control");
-                Log(fsmB.FsmVariables.GetFsmInt("Battle Enemies").Value);
-            }*/
+            else if (GrimmUI == null && !GrimmChild) GrimmChild = true;
         }
 
         public void SceneManager_activeSceneChanged(Scene arg0, Scene arg1)
         {
             GameManager.instance.StartCoroutine(RoomFixes(arg1));
-        }
 
-        public IEnumerator RoomFixes(Scene arg)
-        {
-            yield return new WaitForFinishedEnteringScene();
-            Log(arg.name);
-            string s = arg.name;
-            if (s == "Crossroads_08")
+            IEnumerator RoomFixes(Scene arg)
             {
-                Arenas.Aspids();
-            }
-            else if (s == "Crossroads_04")
-            {
+                yield return new WaitForFinishedEnteringScene();
+                Log(arg.name);
+                string s = arg.name;
+                if (s == "Crossroads_08")
+                {
+                    Arenas.Aspids();
+                }
+                else if (s == "Crossroads_04")
+                {
 
-            }
-            else if (s == "GG_Ghost_Galien" || s == "Deepnest_40")
-            {
-                Bosses.GalienScythe();
-            }
-            else if (s == "Room_Colosseum_Bronze")
-            {
-                Arenas.Colo1();
+                }
+                else if (s == "GG_Ghost_Galien" || s == "Deepnest_40")
+                {
+                    Bosses.GalienScythe();
+                }
+                else if (s == "Room_Colosseum_Bronze")
+                {
+                    Arenas.Colo1();
+                }
+                else if (s == "Room_Colosseum_Silver")
+                {
+                    Arenas.Colo2();
+                }
+                else if (s == "Grimm_Main_Tent")
+                {
+                    PlayMakerFSM Tent = GameObject.Find("Grimm Scene").LocateMyFSM("Initial Scene");
+                    Tent.GetFirstActionOfType<IntCompare>("Check").greaterThan = null;
+                    Tent.SetState("Init");
+                    Log(Tent.ActiveStateName);
+
+                    Tent.GetValidState("Level Up To 2").Actions[8] = new CustomFsmAction
+                    {
+                        method = () =>
+                        {
+                            PlayerData.instance.SetInt("flamesCollected", PlayerData.instance.GetInt("flamesCollected") - 3);
+                        }
+                    };
+                }
             }
         }
 
@@ -200,8 +245,6 @@ namespace DoubleEnemies
                 Log("PreHornet");
                 PlayerData.instance.SetInt("hornetGreenpath", 4);
             }
-
-
             return arg;
         }
 
