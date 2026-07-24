@@ -72,10 +72,17 @@ namespace DoubleEnemies
                 },new IMenuMod.MenuEntry
                 {
                     Name = "Duplicate Drops",
-                    Description = "Duplicate special enemy drops such as Grimmkin Flames",
+                    Description = "Duplicate special enemy drops such as Grimmkin Flames and Mawlek's Mask Shard",
                     Values = new string[] { "Off", "On" },
                     Saver = (i) => Toggles.drops = i == 1,
                     Loader = () => Toggles.drops ? 1 : 0
+                },new IMenuMod.MenuEntry
+                {
+                    Name = "Duplicate Lifeblood",
+                    Description = "Duplicate lifeseeds from lifeblood cocoons",
+                    Values = new string[] { "Off", "On" },
+                    Saver = (i) => Toggles.lifeseeds = i == 1,
+                    Loader = () => Toggles.lifeseeds ? 1 : 0
                 }
             };
         }
@@ -201,10 +208,6 @@ namespace DoubleEnemies
                 {
                     Arenas.Aspids();
                 }
-                else if (s == "Crossroads_04")
-                {
-
-                }
                 else if (s == "GG_Ghost_Galien" || s == "Deepnest_40")
                 {
                     Bosses.GalienScythe();
@@ -216,6 +219,26 @@ namespace DoubleEnemies
                 else if (s == "Room_Colosseum_Silver")
                 {
                     Arenas.Colo2();
+                }
+                else if (s == "Room_Colosseum_Gold")
+                {
+                    Arenas.Colo3();
+                }
+                else if (s == "Deepnest_36" || s == "Mines_16")
+                {
+                    Enemies.Mimics();
+                }
+                else if (s == "Crossroads_09" && Toggles.drops)
+                {
+                    PlayMakerFSM fsm = GameObject.Find("Battle Scene").LocateMyFSM("Battle Control");
+                    fsm.InsertCustomAction("End Wait", () =>
+                    {
+                        Satchel.CoroutineHelper.WaitForSecondsBeforeInvoke(1, () =>
+                        {
+                            GameObject mask = GameObject.Instantiate(GameObject.Find("Heart Piece"));
+                            mask.name += "(EnemyDupe)";
+                        });
+                    }, 2);
                 }
                 else if (s == "Grimm_Main_Tent")
                 {
@@ -231,6 +254,23 @@ namespace DoubleEnemies
                             PlayerData.instance.SetInt("flamesCollected", PlayerData.instance.GetInt("flamesCollected") - 3);
                         }
                     };
+                }
+
+                if (Toggles.lifeseeds)
+                {
+                    Satchel.CoroutineHelper.WaitForSecondsBeforeInvoke(0.1f, () =>
+                    {
+                        GameObject[] Cocoons = UnityEngine.Object.FindObjectsOfType<GameObject>();
+                        foreach (GameObject coco in Cocoons)
+                        {
+                            if (coco.name.Contains("Health Cocoon"))
+                            {
+                                Log("Duping " + coco.name);
+                                GameObject coco2 = GameObject.Instantiate(coco);
+                                coco2.name += "Health Cocoon";
+                            }
+                        }
+                    });
                 }
             }
         }
@@ -426,23 +466,5 @@ namespace DoubleEnemies
 
             Offset.EnemyOffset(enemy, New);
         }
-
-            /*
-             *  Sync Boss Phases to doubled hp
-             *  Spawns that are alraedy duped
-             *  Some enemies can't be duped
-             *  Mimics get deleted 
-             *  Arenas
-             *  Soul warrior in sanctum when coming from the top has no ai
-             *  
-             *  OW Nosk
-             *  OW CG and EG 
-             *  Idk why ascended warrior sometimes tps oob
-             *  Fix OW Galien Scythe
-             *  OW Uumuu
-             *  
-            */
-
-
         }
     }

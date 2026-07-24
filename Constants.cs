@@ -34,7 +34,7 @@ namespace DoubleEnemies
     }
     public static class Toggles
     {
-        public static bool mod = true, onlyboss = false, drops = true, colo = false;
+        public static bool mod = true, onlyboss = false, drops = true, colo = false, lifeseeds = false;
         public static bool QoL = false, Everwatchers = false, Cagney = false, PaleCourt = false;
         public static int amount;
     }

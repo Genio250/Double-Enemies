@@ -17,8 +17,7 @@ Dependencies:
 If you find any enemy not listed that is broken or doesn't get duped, let me know.  
   
 Exceptions:  
-    * Any an all enemies that are spawned off bounds and summoned through a teleport. For example: Aspid Hatchlings.  
-    * The vengefly king in the first trial.  
+    * Some enemies that are spawned off bounds and summoned through a teleport.  
     * Crystal and Enraged Guardian in the overworld.   
     * Some dumb random enemies.  
   
@@ -30,13 +29,12 @@ Supported Mods:
     * Most Radiance mods, as supported by Double Radiance.  
 
 Known issues:  
-    * Colosseum waves are not edited so some can be skipped, most notably the final bosses    
+    * Most sources of damage that are not the nail or spells offset the hp sync and can make bosses invinsible (Grimmchild and Flukenest are confirmed to be broken)  
+    * Colo 3 is still not done 
     * False Knight doesn't double its hp  
     * Mantis Lords and SoB phase 2 duplicates are phase 1 mantis lords, so they don't do coordinated attacks   
-    * Galien duplicate scythe spawns early in the overworld  
     * The Overworld Uumuu copy can't be popped by Quirell and runs out of attacks  
     * Some enemies like Grub mimics just cannot be duplicated  
-    * With QoL enabled, Nosk in the overworld spawns funnily  
     * Soul Warrior in his ascended arena sometimes teleports out of bounds  
     * Soul Warrior 1 in the overworld has no AI when entering the arena from the breakable roof  
   
@@ -48,10 +46,8 @@ Things to do:
              *  Mimics get deleted   
              *  Arenas  
              *    
-             *  OW Nosk  
              *  OW CG and EG   
              *  Idk why ascended warrior sometimes tps oob  
-             *  Fix OW Galien Scythe  
              *  OW Uumuu  
              *  Fix dive entrance warrior  
   
