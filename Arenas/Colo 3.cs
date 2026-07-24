@@ -15,7 +15,6 @@ namespace DoubleEnemies
     {
         public static void Colo3()
         {
-            ModHooks.HeroUpdateHook += ModHooks_HeroUpdateHook;
             PlayMakerFSM fsm = GameObject.Find("Colosseum Manager").LocateMyFSM("Battle Control");
             Log(fsm);
             if (!Toggles.colo)
@@ -124,15 +123,6 @@ namespace DoubleEnemies
             });
 
 
-        }
-
-        private static void ModHooks_HeroUpdateHook()
-        {
-            if (Input.GetKeyUp(KeyCode.Y))
-            {
-                PlayMakerFSM fsm = GameObject.Find("Colosseum Manager").LocateMyFSM("Battle Control");
-                fsm.SetState("Lancer Pause");
-            }
         }
     }
 }
