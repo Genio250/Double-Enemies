@@ -39,10 +39,8 @@ namespace DoubleEnemies
     public class DoubleEnemies : Mod, IMenuMod
     {
         public DoubleEnemies() : base("Double Enemies") { }
-        public override string GetVersion() => "1.1.4";
+        public override string GetVersion() => "2.1.0";
         public bool ToggleButtonInsideMenu => false;
-
-
 
         public List<IMenuMod.MenuEntry> GetMenuData(IMenuMod.MenuEntry? toggleButtonEntry)
         {
@@ -66,13 +64,13 @@ namespace DoubleEnemies
                 {
                     Name = "Crazy Colo",
                     Description = "Disable the fixed wave emission and have a billion enemies at once!",
-                    Values = new string[] { "Off", "On" },
-                    Saver = (i) => Toggles.onlyboss = i == 0,
-                    Loader = () => Toggles.onlyboss ? 0 : 1
+                    Values = new string[] { "On", "Off" },
+                    Saver = (i) => Toggles.colo = i == 0,
+                    Loader = () => Toggles.colo ? 0 : 1
                 },new IMenuMod.MenuEntry
                 {
                     Name = "Duplicate Drops",
-                    Description = "Duplicate special enemy drops such as Grimmkin Flames and Mawlek's Mask Shard",
+                    Description = "Duplicate special enemy drops such as Grimmkin Flames",
                     Values = new string[] { "Off", "On" },
                     Saver = (i) => Toggles.drops = i == 1,
                     Loader = () => Toggles.drops ? 1 : 0
@@ -87,14 +85,14 @@ namespace DoubleEnemies
             };
         }
         public static int counter = 0, togglerer = 0, trip = 0, dry = 0;
-        public static bool Mantis = true, GrimmChild = true;
+        public static bool Mantis = true;
         public static GameObject MantisLord = null;
 
         public override void Initialize()
         {
             Log("Initializing");
-            ModHooks.OnEnableEnemyHook += ModHooks_OnEnableEnemyHook;
-            ModHooks.BeforeSceneLoadHook += ModHooks_BeforeSceneLoadHook;
+            ModHooks.OnEnableEnemyHook += DoubleEnemiesCore;
+            ModHooks.BeforeSceneLoadHook += Misc.HornetDialogueRemoval;
             ModHooks.HeroUpdateHook += ModHooks_HeroUpdateHook;
             UnityEngine.SceneManagement.SceneManager.activeSceneChanged += SceneManager_activeSceneChanged;
             //Bosses.Initialize();
@@ -169,30 +167,18 @@ namespace DoubleEnemies
             if (!Toggles.mod && togglerer == 0)
             {
                 Log("Toggling off");
-                ModHooks.OnEnableEnemyHook -= ModHooks_OnEnableEnemyHook;
-                ModHooks.BeforeSceneLoadHook -= ModHooks_BeforeSceneLoadHook;
+                ModHooks.OnEnableEnemyHook -= DoubleEnemiesCore;
+                ModHooks.BeforeSceneLoadHook -= Misc.HornetDialogueRemoval;
                 togglerer++;
             }
             if (Toggles.mod && togglerer > 0)
             {
                 Log("Toggling on");
-                ModHooks.OnEnableEnemyHook += ModHooks_OnEnableEnemyHook;
-                ModHooks.BeforeSceneLoadHook += ModHooks_BeforeSceneLoadHook;
+                ModHooks.OnEnableEnemyHook += DoubleEnemiesCore;
+                ModHooks.BeforeSceneLoadHook += Misc.HornetDialogueRemoval;
                 togglerer = 0;
             }
-            GameObject GrimmUI = GameObject.Find("Grimm Flame UI");
-            if (GrimmUI != null && GrimmChild)
-            {
-                GrimmUI.LocateMyFSM("Control").AddCustomAction("Set 1", () =>
-                {
-                    if (PlayerData.instance.GetInt("flamesCollected") > 3)
-                    {
-                        GrimmUI.LocateMyFSM("Control").SendEvent("3");
-                    }
-                    GrimmChild = false;
-                });
-            }
-            else if (GrimmUI == null && !GrimmChild) GrimmChild = true;
+            Misc.UIFlame();
         }
 
         public void SceneManager_activeSceneChanged(Scene arg0, Scene arg1)
@@ -230,63 +216,21 @@ namespace DoubleEnemies
                 }
                 else if (s == "Crossroads_09" && Toggles.drops)
                 {
-                    PlayMakerFSM fsm = GameObject.Find("Battle Scene").LocateMyFSM("Battle Control");
-                    fsm.InsertCustomAction("End Wait", () =>
-                    {
-                        Satchel.CoroutineHelper.WaitForSecondsBeforeInvoke(1, () =>
-                        {
-                            GameObject mask = GameObject.Instantiate(GameObject.Find("Heart Piece"));
-                            mask.name += "(EnemyDupe)";
-                        });
-                    }, 2);
+                    Misc.MawlekShard();
                 }
                 else if (s == "Grimm_Main_Tent")
                 {
-                    PlayMakerFSM Tent = GameObject.Find("Grimm Scene").LocateMyFSM("Initial Scene");
-                    Tent.GetFirstActionOfType<IntCompare>("Check").greaterThan = null;
-                    Tent.SetState("Init");
-                    Log(Tent.ActiveStateName);
-
-                    Tent.GetValidState("Level Up To 2").Actions[8] = new CustomFsmAction
-                    {
-                        method = () =>
-                        {
-                            PlayerData.instance.SetInt("flamesCollected", PlayerData.instance.GetInt("flamesCollected") - 3);
-                        }
-                    };
+                    Misc.FlamePickupFix();
                 }
 
                 if (Toggles.lifeseeds)
                 {
-                    Satchel.CoroutineHelper.WaitForSecondsBeforeInvoke(0.1f, () =>
-                    {
-                        GameObject[] Cocoons = UnityEngine.Object.FindObjectsOfType<GameObject>();
-                        foreach (GameObject coco in Cocoons)
-                        {
-                            if (coco.name.Contains("Health Cocoon"))
-                            {
-                                Log("Duping " + coco.name);
-                                GameObject coco2 = GameObject.Instantiate(coco);
-                                coco2.name += "Health Cocoon";
-                            }
-                        }
-                    });
+                    Misc.LifeBlood();
                 }
             }
         }
 
-        private string ModHooks_BeforeSceneLoadHook(string arg)
-        {
-            if(arg == "Fungus1_21")
-            {
-                Log("PreHornet");
-                PlayerData.instance.SetInt("hornetGreenpath", 4);
-            }
-            return arg;
-        }
-
-
-        private bool ModHooks_OnEnableEnemyHook(GameObject enemy, bool isAlreadyDead)
+        public bool DoubleEnemiesCore(GameObject enemy, bool isAlreadyDead)
         {
             if (!isAlreadyDead && !enemy.name.Contains("(EnemyDupe)"))
             {
@@ -298,7 +242,7 @@ namespace DoubleEnemies
                 else if (enemy.name.Contains("Ghost Warrior Markoth")) wait = 1;
                 else if (enemy.name.Contains("Shade Sibling")) wait = 1;
                 else if (enemy.name.Contains("Mawlek Body")) { wait = 0.1f; tp = true; }
-                else if (enemy.name.Contains("Lobster")) wait = 5;
+                else if (enemy.name.Contains("Lobster") && !GameManager.instance.sceneName.Contains("Colosseum")) wait = 5;
                 else if (enemy.name.Contains("Mage Balloon Spawner")) wait = 1;
                 else if (enemy.name.Contains("Jar Collector")) wait = 0.1f;
                 else if (enemy.name.Contains("Grimm Boss")) { wait = 0.1f; tp = true; }
@@ -380,7 +324,7 @@ namespace DoubleEnemies
                     Satchel.CoroutineHelper.WaitForSecondsBeforeInvoke(1, () => Bosses.GalienMinis());
                 if (enemy.name.Contains("Mega Moss Charger"))
                     Satchel.CoroutineHelper.WaitForSecondsBeforeInvoke(1, () => Bosses.MossyAI());
-                if (enemy.name.Contains("Lobster"))
+                if (enemy.name.Contains("Lobster") && !GameManager.instance.sceneName.Contains("Colosseum"))
                     Satchel.CoroutineHelper.WaitForSecondsBeforeInvoke(5.1f, () => Bosses.LobsterAI());
                 if (enemy.name.Contains("Hornet Nosk"))
                     Bosses.NosketAI();

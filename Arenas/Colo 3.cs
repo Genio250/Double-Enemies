@@ -15,13 +15,14 @@ namespace DoubleEnemies
     {
         public static void Colo3()
         {
+            ModHooks.HeroUpdateHook += ModHooks_HeroUpdateHook;
             PlayMakerFSM fsm = GameObject.Find("Colosseum Manager").LocateMyFSM("Battle Control");
             Log(fsm);
             if (!Toggles.colo)
             {
                 foreach (var state in fsm.FsmStates)
                 {
-                    if (state.Name.Contains("Wave"))
+                    if (state.Name.Contains("Wave") && !state.Name.Contains("23"))
                     {
                         Log(state.Name);
                         if (fsm.GetFirstActionOfType<SetIntValue>(state.Name) != null)
@@ -36,48 +37,101 @@ namespace DoubleEnemies
                     }
                 }
             }
-
-            fsm.GetFirstActionOfType<IntCompare>("Wave 30 Obble").integer2.Value *= 2;
-
-            fsm.AddCustomAction("Wave 20", () =>
+            Satchel.CoroutineHelper.WaitForSecondsBeforeInvoke(1, () =>
             {
-                ModHooks.HeroUpdateHook += Colo2MimicFinder;
-            });
-
-            fsm.AddCustomAction("Wave 30 Obble", () =>
-            {
-                Satchel.CoroutineHelper.WaitForSecondsBeforeInvoke(2.3f, () =>
+                List<GameObject> SoulTwisters = new List<GameObject>();
+                List<GameObject> SoulWarriors = new List<GameObject>();
+                GameObject[] array = UnityEngine.Object.FindObjectsOfType<GameObject>();
+                foreach (var obj in array)
                 {
-                    GameObject vfk = Resources.FindObjectsOfTypeAll<GameObject>().FirstOrDefault(go => go.name == "Mega Fat Bee");
-                    GameObject vfk2 = GameObject.Instantiate(vfk);
-                    vfk2.SetActive(true);
-                    vfk2.name = "Mega Fat Bee(EnemyDupe)";
-                    vfk2.transform.position = vfk.transform.position - new Vector3(0, 5, 0);
+                    if (obj.name.Contains("(EnemyDupe)"))
+                    {
+                        Log(obj.name);
+                        if (obj.name.Contains("Mage") && !obj.name.Contains("Knight"))
+                        {
+                            SoulTwisters.Add(obj);
+                        }
+                        if (obj.name.Contains("Knight"))
+                        {
+                            SoulWarriors.Add(obj);
+                        }
+                    }
+                }
 
-                    HPShare.DoubleHP(vfk, vfk2);
-                    Offset.EnemyOffset(vfk, vfk2);
+                fsm.InsertCustomAction("Wave 22", () =>
+                {
+                    Log("Bringing " + SoulTwisters[0].name);
+                    SoulTwisters[0].LocateMyFSM("Mage").SendEvent("WAKE");
+                }, 2);
 
-                    GameObject Bee12 = Resources.FindObjectsOfTypeAll<GameObject>().FirstOrDefault(go => go.name == "Mega Fat Bee (1)");
-                    GameObject Bee22 = GameObject.Instantiate(Bee12);
-                    Bee22.SetActive(true);
-                    Bee22.name = "Mega Fat Bee (1)(EnemyDupe)";
-                    Bee22.transform.position = Bee12.transform.position - new Vector3(0, 5, 0);
+                fsm.InsertCustomAction("Wave 22", () =>
+                {
+                    Log("Bringing " + SoulTwisters[1].name);
+                    SoulTwisters[1].LocateMyFSM("Mage").SendEvent("WAKE");
+                }, 3);
 
-                    HPShare.DoubleHP(Bee12, Bee22);
-                    Offset.EnemyOffset(Bee12, Bee22);
+                fsm.InsertCustomAction("Wave 24", () =>
+                {
+                    Log("Bringing " + SoulWarriors[0].name);
+                    SoulWarriors[0].LocateMyFSM("Mage Knight").SendEvent("BATTLE START");
+                    GameObject ActiveKnight = GameObject.Find("Wave 24/Mage Knight");
+                    Log(ActiveKnight);
+                    ActiveKnight.name = "Mage Knight Col";
+                    SoulWarriors[0].name = "Mage Knight Col(EnemyDupe)";
+
+                    HPShare.DoubleHP(ActiveKnight, SoulWarriors[0]);
+                }, 3);
+
+                fsm.InsertCustomAction("Wave 26", () =>
+                {
+                    Log("Bringing " + SoulTwisters[2].name);
+                    SoulTwisters[2].LocateMyFSM("Mage").SendEvent("WAKE");
+                }, 3);
+
+                fsm.AddCustomAction("Wave 28", () =>
+                {
+                    Log("Bringing " + SoulTwisters[3].name);
+                    SoulTwisters[3].LocateMyFSM("Mage").SendEvent("WAKE");
+                });
+
+                fsm.AddCustomAction("Wave 29", () =>
+                {
+                    Log("Bringing " + SoulTwisters[4].name);
+                    SoulTwisters[4].LocateMyFSM("Mage").SendEvent("WAKE");
+
+                    Log("Bringing " + SoulWarriors[1].name);
+                    SoulWarriors[1].LocateMyFSM("Mage Knight").SendEvent("BATTLE START");
+                });
+
+                fsm.AddCustomAction("Wave 46", () =>
+                {
+                    Log("Bringing " + SoulTwisters[5].name);
+                    SoulTwisters[5].LocateMyFSM("Mage").SendEvent("WAKE");
+                });
+
+                fsm.AddCustomAction("Lancer Battle", () =>
+                {
+                    Log("Lancer battle");
+                    Satchel.CoroutineHelper.WaitForSecondsBeforeInvoke(4, () =>
+                    {
+                        GameObject Lob = GameObject.Find("Lobster");
+                        GameObject dup = GameObject.Find("Lobster(EnemyDupe)");
+
+                        dup.transform.position = Lob.transform.position;
+                        Bosses.LobsterAI();
+                    });
                 });
             });
 
+
         }
 
-        private static void Colo2MimicFinder()
+        private static void ModHooks_HeroUpdateHook()
         {
-            if(GameObject.Find("Grub Mimic Bottle Col(Clone)")  != null)
+            if (Input.GetKeyUp(KeyCode.Y))
             {
-                Log("Duping Mimic");
-                GameObject mimic = GameObject.Instantiate(GameObject.Find("Grub Mimic Bottle Col(Clone)"));
-                mimic.name += "(EnemyDupe)";
-                ModHooks.HeroUpdateHook -= Colo2MimicFinder;
+                PlayMakerFSM fsm = GameObject.Find("Colosseum Manager").LocateMyFSM("Battle Control");
+                fsm.SetState("Lancer Pause");
             }
         }
     }
