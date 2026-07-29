@@ -23,6 +23,7 @@ namespace DoubleEnemies
             "Black Knight 7", "Black Knight 8", "Black Knight 9", "Black Knight 10", "Black Knight 11", "Black Knight 12", "Black Knight 13",
             "Black Knight 14", "Black Knight 15", "Cagney Carnation", "Dryya2(Clone)", "Tiso(Clone)", "Hegemol", "Zemer(Clone)"];
 
+
         public static List<string> Exceptions = ["Radiance", "Head", "Tinger", "Mantis Lord", "Hegemol", "Zemer", "Isma", "Tiso", "Fly 1", "Fly 2", "Fly 3",
             "Fly 4", "Fly 5", "Fly 6", "Shell", "Mimic"];
 

@@ -17,6 +17,7 @@ namespace DoubleEnemies
 
         public static void GrimmkinAI(string s)
         {
+            if (!Toggles.onlyboss) return;
             current = s + "(EnemyDupe)";
             GameObject GrimmKin = GameObject.Find(s);
             PlayMakerFSM fsm = GrimmKin.LocateMyFSM("Control");

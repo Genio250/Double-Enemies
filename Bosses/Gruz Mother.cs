@@ -26,6 +26,8 @@ namespace DoubleEnemies
 
             Mom.transform.position = GameObject.Find("Giant Fly").transform.position - new Vector3(0, 0, 0.1f);
 
+            if (!Toggles.onlyboss) return;
+
             GameObject Battle = GameObject.Find("Battle Scene");
             PlayMakerFSM fsm = Battle.LocateMyFSM("Battle Control");
             fsm.InsertCustomAction("Start", () =>

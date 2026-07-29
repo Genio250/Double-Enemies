@@ -15,6 +15,7 @@ namespace DoubleEnemies
     {
         public static void Ogres()
         {
+            if (!Toggles.onlyboss) return;
             GameObject Battle = GameObject.Find("Battle Scene v2");
             PlayMakerFSM fsmB = Battle.LocateMyFSM("Battle Control");
 

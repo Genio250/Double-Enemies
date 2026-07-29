@@ -15,6 +15,7 @@ namespace DoubleEnemies
     {
         public static void Aspids()
         {
+            if (!Toggles.onlyboss) return;
             PlayMakerFSM fsm = GameObject.Find("Battle Scene").LocateMyFSM("Battle Control");
             fsm.GetFirstActionOfType<SetIntValue>("Wave 1").intValue = 6;
             fsm.GetFirstActionOfType<IntCompare>("Wave 1").integer2 = 4;

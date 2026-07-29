@@ -169,6 +169,7 @@ namespace DoubleEnemies
                 Log("Toggling off");
                 ModHooks.OnEnableEnemyHook -= DoubleEnemiesCore;
                 ModHooks.BeforeSceneLoadHook -= Misc.HornetDialogueRemoval;
+                On.HealthManager.TakeDamage -= HPShare.HealthManager_TakeDamage;
                 togglerer++;
             }
             if (Toggles.mod && togglerer > 0)
@@ -176,6 +177,7 @@ namespace DoubleEnemies
                 Log("Toggling on");
                 ModHooks.OnEnableEnemyHook += DoubleEnemiesCore;
                 ModHooks.BeforeSceneLoadHook += Misc.HornetDialogueRemoval;
+                On.HealthManager.TakeDamage += HPShare.HealthManager_TakeDamage;
                 togglerer = 0;
             }
             Misc.UIFlame();
@@ -251,6 +253,15 @@ namespace DoubleEnemies
                 else if (enemy.name.Contains("Zombie Beam Miner Rematch")) { wait = 3; tp = true; }
                 else wait = 0;
 
+                if (Toggles.onlyboss)
+                {
+                    skip = true;
+                    foreach (string s in Lists.Bosses)
+                    {
+                        if (enemy.name.Contains(s)) skip = false;
+                    }
+                }
+
                 foreach (string s in Lists.Tripled)
                 {
                     if (enemy.name.Contains(s))
@@ -287,15 +298,6 @@ namespace DoubleEnemies
                 foreach (string s in Lists.Exceptions)
                 {
                     if (enemy.name.Contains(s)) skip = true;
-                }
-
-                if (Toggles.onlyboss)
-                {
-                    skip = true;
-                    foreach (string s in Lists.Bosses)
-                    {
-                        if (enemy.name.Contains(s)) skip = false;
-                    }
                 }
 
                 if (!skip)

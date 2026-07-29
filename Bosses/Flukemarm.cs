@@ -1,12 +1,4 @@
-﻿using HutongGames.PlayMaker.Actions;
-using HutongGames.PlayMaker;
-using Modding;
-using Satchel;
-using Satchel.Futils;
-using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.Linq;
+﻿using Satchel;
 using UnityEngine;
 
 namespace DoubleEnemies
@@ -16,17 +8,23 @@ namespace DoubleEnemies
         public static void FlukeAI(GameObject enemy)
         {
             PlayMakerFSM fsm = enemy.LocateMyFSM("Fluke Mother");
-            fsm.CopyState("Spawn 2", "Spawn 4");
-            fsm.CopyState("Spawn", "Spawn 3");
-            fsm.ChangeTransition("Spawn 2", "FINISHED", "Spawn 4");
-            fsm.ChangeTransition("Spawn", "FINISHED", "Spawn 3");
+            if (!Toggles.onlyboss)
+            {
+                fsm.CopyState("Spawn 2", "Spawn 4");
+                fsm.CopyState("Spawn", "Spawn 3");
+                fsm.ChangeTransition("Spawn 2", "FINISHED", "Spawn 4");
+                fsm.ChangeTransition("Spawn", "FINISHED", "Spawn 3");
+            }
 
             GameObject copy = GameObject.Find(enemy.name + "(EnemyDupe)");
             PlayMakerFSM fsm2 = copy.LocateMyFSM("Fluke Mother");
-            fsm2.CopyState("Spawn 2", "Spawn 4");
-            fsm2.CopyState("Spawn", "Spawn 3");
-            fsm2.ChangeTransition("Spawn 2", "FINISHED", "Spawn 4");
-            fsm2.ChangeTransition("Spawn", "FINISHED", "Spawn 3");
+            if (!Toggles.onlyboss)
+            {
+                fsm2.CopyState("Spawn 2", "Spawn 4");
+                fsm2.CopyState("Spawn", "Spawn 3");
+                fsm2.ChangeTransition("Spawn 2", "FINISHED", "Spawn 4");
+                fsm2.ChangeTransition("Spawn", "FINISHED", "Spawn 3");
+            }
 
             UnityEngine.Object[] array = UnityEngine.Object.FindObjectsOfType<GameObject>();
             foreach (GameObject obj in array)
@@ -34,7 +32,7 @@ namespace DoubleEnemies
                 if (obj.name.Contains("Fluke Fly Spawner") && obj.name.Contains("(EnemyDupe)"))
                 {
                     obj.transform.parent = GameObject.Find("Hatcher Cage (2)").transform;
-                    Modding.Logger.Log(obj.transform.parent);
+                    Log(obj.transform.parent);
                 }
             }
 

@@ -164,39 +164,48 @@ namespace DoubleEnemies
             {
                 method = () => {
                     DupeBee1FSM.SendEvent("SWARM");
-                    DupeBee1FSMDupe.SendEvent("SWARM");
                     DupeBee2FSM.SendEvent("SWARM");
-                    DupeBee2FSMDupe.SendEvent("SWARM");
                     DupeBee3FSM.SendEvent("SWARM");
-                    DupeBee3FSMDupe.SendEvent("SWARM");
                     DupeBee4FSM.SendEvent("SWARM");
-                    DupeBee4FSMDupe.SendEvent("SWARM");
                     DupeBee5FSM.SendEvent("SWARM");
-                    DupeBee5FSMDupe.SendEvent("SWARM");
                     DupeBee6FSM.SendEvent("SWARM");
-                    DupeBee6FSMDupe.SendEvent("SWARM");
                     DupeBee7FSM.SendEvent("SWARM");
-                    DupeBee7FSMDupe.SendEvent("SWARM");
+
+                    if (!Toggles.onlyboss)
+                    {
+                        DupeBee1FSMDupe.SendEvent("SWARM");
+                        DupeBee2FSMDupe.SendEvent("SWARM");
+                        DupeBee3FSMDupe.SendEvent("SWARM");
+                        DupeBee4FSMDupe.SendEvent("SWARM");
+                        DupeBee5FSMDupe.SendEvent("SWARM");
+                        DupeBee6FSMDupe.SendEvent("SWARM");
+                        DupeBee7FSMDupe.SendEvent("SWARM");
+                    }
+
                 }
             };
 
             fsm.Fsm.GetState("Roar Recover").Actions[0] = new CustomFsmAction()
             {
                 method = () => {
-                    Bee1FSMDupe.SendEvent("SWARM");
                     Bee1FSM.SendEvent("SWARM");
-                    Bee2FSMDupe.SendEvent("SWARM");
                     Bee2FSM.SendEvent("SWARM");
-                    Bee3FSMDupe.SendEvent("SWARM");
                     Bee3FSM.SendEvent("SWARM");
-                    Bee4FSMDupe.SendEvent("SWARM");
                     Bee4FSM.SendEvent("SWARM");
-                    Bee5FSMDupe.SendEvent("SWARM");
                     Bee5FSM.SendEvent("SWARM");
-                    Bee6FSMDupe.SendEvent("SWARM");
                     Bee6FSM.SendEvent("SWARM");
-                    Bee7FSMDupe.SendEvent("SWARM");
                     Bee7FSM.SendEvent("SWARM");
+
+                    if (!Toggles.onlyboss)
+                    {
+                        Bee1FSMDupe.SendEvent("SWARM");
+                        Bee2FSMDupe.SendEvent("SWARM");
+                        Bee3FSMDupe.SendEvent("SWARM");
+                        Bee4FSMDupe.SendEvent("SWARM");
+                        Bee5FSMDupe.SendEvent("SWARM");
+                        Bee6FSMDupe.SendEvent("SWARM");
+                        Bee7FSMDupe.SendEvent("SWARM");
+                    }
                 }
             };
 
@@ -212,6 +221,8 @@ namespace DoubleEnemies
                 {
                     fsmd.SendEvent("WAKE");
                 });
+
+                if (!Toggles.onlyboss) return;
 
                 bfsm.Fsm.GetState("Droppers").Actions[0] = new CustomFsmAction()
                 {
