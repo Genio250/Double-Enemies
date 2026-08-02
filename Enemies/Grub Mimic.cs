@@ -8,7 +8,7 @@ namespace DoubleEnemies
     {
         public static void Mimics()
         {
-            if (!Toggles.onlyboss) return;
+            if (Toggles.onlyboss) return;
             Log("Mimic");
             GameObject[] arr = UnityEngine.Object.FindObjectsOfType<GameObject>();
             foreach (GameObject obj in arr)

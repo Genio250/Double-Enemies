@@ -15,7 +15,7 @@ namespace DoubleEnemies
     {
         public static void Colo3()
         {
-            if (!Toggles.onlyboss) return;
+            if (Toggles.onlyboss) return;
             PlayMakerFSM fsm = GameObject.Find("Colosseum Manager").LocateMyFSM("Battle Control");
             Log(fsm);
             if (!Toggles.colo)

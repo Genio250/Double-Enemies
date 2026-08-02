@@ -15,7 +15,7 @@ namespace DoubleEnemies
     {
         public static void HatcherAI(GameObject enemy)
         {
-            if (!Toggles.onlyboss) return;
+            if (Toggles.onlyboss) return;
 
             PlayMakerFSM fsm = enemy.LocateMyFSM("Hatcher");
             fsm.CopyState("Fire", "Fire 2");
